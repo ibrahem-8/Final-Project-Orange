@@ -1,0 +1,149 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.TutorSubject>
+
+@{
+    ViewData["Title"] = "Pending Subjects";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">📚 Subject Verification</span>
+
+                    <h1 class="admin-list-title">
+                        Review pending tutor subjects.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        Approve or reject newly submitted subjects after checking the uploaded transcript or proof.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+
+    @if (TempData["SubjectSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["SubjectSuccess"]
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Pending Subjects</h2>
+            <p class="text-muted mb-0">
+                These subjects are waiting for admin approval before appearing to students.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() subject(s)
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h3>No pending subjects</h3>
+            <p>
+                All submitted tutor subjects have been reviewed.
+            </p>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="admin-tutor-review-card h-100">
+                        <div class="admin-tutor-card-top">
+                            <div>
+                                <span class="booking-label">Tutor</span>
+                                <h4>@item.TutorProfile?.User?.FullName</h4>
+                                <small class="text-muted">@item.TutorProfile?.User?.Email</small>
+                            </div>
+
+                            <span class="badge bg-warning text-dark">
+                                @item.VerificationStatus
+                            </span>
+                        </div>
+
+                        <div class="booking-info-grid mt-4">
+                            <div class="booking-info-item">
+                                <span>Subject</span>
+                                <strong>@item.Subject?.Name</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Grade</span>
+                                <strong>@item.Grade</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>University</span>
+                                <strong>@item.TutorProfile?.University</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Submitted At</span>
+                                <strong>@item.CreatedAt.ToString("yyyy-MM-dd")</strong>
+                            </div>
+                        </div>
+
+                        <div class="admin-document-panel mt-4">
+                            <h5>Subject Proof</h5>
+
+                            @if (!string.IsNullOrEmpty(item.AcademicTranscriptUrl))
+                            {
+                                <a href="@item.AcademicTranscriptUrl"
+                                   target="_blank"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View Transcript / Proof
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-outline-secondary btn-sm disabled">
+                                    No Proof Uploaded
+                                </span>
+                            }
+                        </div>
+
+                        <div class="admin-review-actions mt-4">
+                            <form asp-controller="Admin" asp-action="ApproveSubject" method="post">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-success w-100">
+                                    Approve Subject
+                                </button>
+                            </form>
+
+                            <form asp-controller="Admin" asp-action="RejectSubject" method="post">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    Reject Subject
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

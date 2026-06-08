@@ -1,0 +1,196 @@
+﻿@{
+    ViewData["Title"] = "Tutor Dashboard";
+    var tutorProfile = ViewBag.TutorProfile as TopStudentsTutoringPlatform.Models.TutorProfile;
+}
+
+<section class="tutor-dashboard-hero">
+    <div class="container">
+        <div class="tutor-dashboard-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">👨‍🏫 Tutor Dashboard</span>
+
+                    <h1 class="tutor-dashboard-title">
+                        Manage your tutoring profile, subjects, availability, and bookings.
+                    </h1>
+
+                    <p class="tutor-dashboard-subtitle">
+                        Build your academic tutor profile, add the subjects you are qualified to teach,
+                        manage your available times, and track all received student bookings.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0 text-lg-end">
+                    @if (tutorProfile == null)
+                    {
+                        <a asp-controller="Tutor" asp-action="CreateProfile" class="btn btn-light btn-lg">
+                            Create Tutor Profile
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Tutor" asp-action="MyBookings" class="btn btn-light btn-lg">
+                            View My Bookings
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container tutor-dashboard-section">
+    @if (tutorProfile == null)
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📝</div>
+            <h3>You have not created your tutor profile yet</h3>
+            <p>
+                Create your academic profile, upload your transcript, and submit it for admin approval.
+            </p>
+
+            <a asp-controller="Tutor" asp-action="CreateProfile" class="btn btn-primary btn-lg">
+                Create Tutor Profile
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="tutor-profile-summary-card">
+                    <div class="d-flex align-items-center gap-3 flex-wrap mb-4">
+                        <div class="profile-avatar">
+                            @{
+                                var tutorName = tutorProfile.User?.FullName ?? "Tutor";
+                                var initials = "TS";
+
+                                if (!string.IsNullOrWhiteSpace(tutorName))
+                                {
+                                    var parts = tutorName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                    initials = parts.Length >= 2
+                                    ? $"{parts[0][0]}{parts[1][0]}"
+                                    : $"{parts[0][0]}";
+                                }
+                            }
+
+                            @initials.ToUpper()
+                        </div>
+
+                        <div>
+                            <span class="verified-badge">Tutor Profile</span>
+                            <h3 class="mb-1 mt-2">@tutorProfile.User?.FullName</h3>
+                            <p class="text-muted mb-0">
+                                @tutorProfile.Major • @tutorProfile.University
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="tutor-dashboard-info-grid">
+                        <div class="booking-info-item">
+                            <span>University</span>
+                            <strong>@tutorProfile.University</strong>
+                        </div>
+
+                        <div class="booking-info-item">
+                            <span>Major</span>
+                            <strong>@tutorProfile.Major</strong>
+                        </div>
+
+                        <div class="booking-info-item">
+                            <span>GPA</span>
+                            <strong>@tutorProfile.GPA</strong>
+                        </div>
+
+                        <div class="booking-info-item">
+                            <span>Hourly Rate</span>
+                            <strong>@tutorProfile.HourlyRate JOD</strong>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5 class="fw-bold">Bio</h5>
+                        <p class="text-muted mb-0">
+                            @tutorProfile.Bio
+                        </p>
+                    </div>
+
+                    <div class="mt-4 d-flex flex-wrap gap-2">
+                        @if (!string.IsNullOrEmpty(tutorProfile.AcademicTranscriptUrl))
+                        {
+                            <a href="@tutorProfile.AcademicTranscriptUrl" target="_blank" class="btn btn-outline-primary">
+                                View Transcript
+                            </a>
+                        }
+
+                        @if (!string.IsNullOrEmpty(tutorProfile.CVUrl))
+                        {
+                            <a href="@tutorProfile.CVUrl" target="_blank" class="btn btn-outline-secondary">
+                                View CV
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="tutor-status-card">
+                    <h4 class="mb-3">Verification Status</h4>
+
+                    @if (tutorProfile.VerificationStatus == "Approved")
+                    {
+                        <div class="status-bubble approved">
+                            <span>✅</span>
+                            <div>
+                                <strong>Approved</strong>
+                                <p>Your profile is visible to students.</p>
+                            </div>
+                        </div>
+                    }
+                    else if (tutorProfile.VerificationStatus == "Rejected")
+                    {
+                        <div class="status-bubble rejected">
+                            <span>❌</span>
+                            <div>
+                                <strong>Rejected</strong>
+                                <p>Your profile was rejected by the admin.</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="status-bubble pending">
+                            <span>⏳</span>
+                            <div>
+                                <strong>Pending Approval</strong>
+                                <p>Your profile is waiting for admin review.</p>
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+
+                    <h5 class="fw-bold mb-3">Tutor Management</h5>
+
+                    <div class="d-grid gap-3">
+                        <a asp-controller="Tutor" asp-action="ManageSubjects" class="btn btn-outline-primary btn-lg">
+                            Manage Subjects
+                        </a>
+
+                        <a asp-controller="Tutor" asp-action="ManageAvailability" class="btn btn-outline-success btn-lg">
+                            Manage Availability
+                        </a>
+
+                        <a asp-controller="Tutor" asp-action="MyBookings" class="btn btn-outline-warning btn-lg">
+                            My Bookings
+                        </a>
+
+                        <a asp-controller="Tutor" asp-action="ManagePackages" class="btn btn-outline-info btn-lg">
+                            Manage Packages
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>

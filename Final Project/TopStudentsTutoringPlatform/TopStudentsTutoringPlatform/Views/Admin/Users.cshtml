@@ -1,0 +1,180 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">👥 User Management</span>
+
+                    <h1 class="admin-list-title">
+                        Manage platform users and account access.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        View all students, tutors, and admins. Ban or reactivate accounts when needed to protect the platform.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+
+    @if (TempData["UserSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["UserSuccess"]
+        </div>
+    }
+
+    @if (TempData["UserError"] != null)
+    {
+        <div class="alert alert-danger premium-alert">
+            @TempData["UserError"]
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">All Users</h2>
+            <p class="text-muted mb-0">
+                Manage user access and account status.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() user(s)
+        </span>
+    </div>
+
+    <form asp-controller="Admin" asp-action="Users" method="get" class="admin-user-search-form mb-4">
+        <div class="input-group">
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control form-control-lg"
+                   placeholder="Search by name, email, or role..." />
+
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+            <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-secondary">
+                Clear
+            </a>
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">👥</div>
+            <h3>No users found</h3>
+            <p>No users are currently registered in the system.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var user = item.User;
+                string roles = item.Roles;
+                bool isBanned = item.IsBanned;
+
+                <div class="col-lg-6">
+                    <div class="admin-user-card h-100">
+                        <div class="admin-user-top">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="tutor-avatar">
+                                    @{
+                                        string initials = "U";
+
+                                        if (!string.IsNullOrWhiteSpace(user.FullName))
+                                        {
+                                            var parts = user.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                            initials = parts.Length >= 2
+                                            ? $"{parts[0][0]}{parts[1][0]}"
+                                            : $"{parts[0][0]}";
+                                        }
+                                    }
+
+                                    @initials.ToUpper()
+                                </div>
+
+                                <div>
+                                    <h4>@user.FullName</h4>
+                                    <small class="text-muted">@user.Email</small>
+                                </div>
+                            </div>
+
+                            @if (isBanned)
+                            {
+                                <span class="complaint-status rejected">Banned</span>
+                            }
+                            else
+                            {
+                                <span class="complaint-status resolved">Active</span>
+                            }
+                        </div>
+
+                        <div class="booking-info-grid mt-4">
+                            <div class="booking-info-item">
+                                <span>Role</span>
+                                <strong>@roles</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Email Confirmed</span>
+                                <strong>@(user.EmailConfirmed ? "Yes" : "No")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Created At</span>
+                                <strong>@user.CreatedAt.ToString("yyyy-MM-dd")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Status</span>
+                                <strong>@(isBanned ? "Account Disabled" : "Account Active")</strong>
+                            </div>
+                        </div>
+
+                        <div class="admin-user-actions mt-4">
+                            @if (isBanned)
+                            {
+                                <form asp-controller="Admin" asp-action="UnbanUser" method="post">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn btn-success w-100">
+                                        Activate Account
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Admin" asp-action="BanUser" method="post">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn btn-outline-danger w-100">
+                                        Ban / Disable Account
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

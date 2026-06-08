@@ -35,6 +35,12 @@ namespace TopStudentsTutoringPlatform.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal HourlyRate { get; set; }
 
+        [StringLength(500)]
+        public string? AcademicTranscriptUrl { get; set; }
+
+        [StringLength(500)]
+        public string? CVUrl { get; set; }
+
         public string VerificationStatus { get; set; } = "Pending";
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

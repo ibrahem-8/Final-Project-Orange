@@ -1,0 +1,257 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<section class="bookings-hero">
+    <div class="container">
+        <div class="bookings-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">📚 Student Bookings</span>
+                    <h1 class="bookings-title">
+                        Track your sessions, payments, meetings, and reviews.
+                    </h1>
+                    <p class="bookings-subtitle">
+                        Manage all your tutoring sessions in one place. Pay securely with Stripe,
+                        join meetings, submit reviews after sessions, and report any issue if needed.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Student" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Find More Tutors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container bookings-section">
+
+    @if (TempData["PaymentSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["PaymentSuccess"]
+        </div>
+    }
+
+    @if (TempData["ReviewError"] != null)
+    {
+        <div class="alert alert-danger premium-alert">
+            @TempData["ReviewError"]
+        </div>
+    }
+
+    @if (TempData["ReviewSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["ReviewSuccess"]
+        </div>
+    }
+
+    @if (TempData["ComplaintSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["ComplaintSuccess"]
+        </div>
+    }
+
+    @if (TempData["ComplaintError"] != null)
+    {
+        <div class="alert alert-danger premium-alert">
+            @TempData["ComplaintError"]
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <h3>No bookings yet</h3>
+            <p>
+                Start by finding a verified top student tutor and book your first learning session.
+            </p>
+            <a asp-controller="Student" asp-action="Dashboard" class="btn btn-primary">
+                Find Tutors
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="section-heading mb-1">My Bookings</h2>
+                <p class="text-muted mb-0">
+                    You have @Model.Count() booking(s) in your learning schedule.
+                </p>
+            </div>
+
+            <span class="result-pill">
+                @Model.Count() session(s)
+            </span>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var booking in Model)
+            {
+                var sessionStartDateTime = booking.BookingDate.Date.Add(booking.StartTime);
+                var sessionEndDateTime = booking.BookingDate.Date.Add(booking.EndTime);
+
+                var joinAvailableFrom = sessionStartDateTime.AddMinutes(-5);
+
+                var canJoinMeeting = DateTime.Now >= joinAvailableFrom && DateTime.Now < sessionEndDateTime;
+                var isTooEarlyToJoin = DateTime.Now < joinAvailableFrom;
+                var isSessionEnded = DateTime.Now >= sessionEndDateTime;
+
+                var canReview = isSessionEnded;
+                var canSubmitComplaint = isSessionEnded;
+                var isPaid = booking.Payment?.PaymentStatus == "Paid";
+
+                <div class="col-lg-6">
+                    <div class="booking-card h-100">
+                        <div class="booking-card-top">
+                            <div>
+                                <span class="booking-label">Tutor</span>
+                                <h4>@booking.TutorProfile?.User?.FullName</h4>
+                            </div>
+
+                            @if (booking.Status == "Confirmed")
+                            {
+                                <span class="badge bg-success">@booking.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@booking.Status</span>
+                            }
+                        </div>
+
+                        <div class="booking-info-grid">
+                            <div class="booking-info-item">
+                                <span>Subject</span>
+                                <strong>@booking.Subject?.Name</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Date</span>
+                                <strong>@booking.BookingDate.ToString("yyyy-MM-dd")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Time</span>
+                                <strong>@booking.StartTime - @booking.EndTime</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Amount</span>
+                                <strong>
+                                    @(booking.Payment != null ? booking.Payment.Amount.ToString("0.00") + " JOD" : "-")
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="payment-strip @(isPaid ? "paid" : "pending")">
+                            <div>
+                                <span>Payment Status</span>
+                                @if (isPaid)
+                                {
+                                    <strong>Paid</strong>
+                                }
+                                else
+                                {
+                                    <strong>@(booking.Payment?.PaymentStatus ?? booking.PaymentStatus)</strong>
+                                }
+                            </div>
+
+                            @if (!isPaid)
+                            {
+                                <a asp-controller="Payments"
+                                   asp-action="Checkout"
+                                   asp-route-bookingId="@booking.Id"
+                                   class="btn btn-success btn-sm">
+                                    Pay Now
+                                </a>
+                            }
+                        </div>
+
+                        <div class="booking-actions">
+                            @if (string.IsNullOrEmpty(booking.MeetingLink))
+                            {
+                                <button class="btn btn-outline-secondary btn-sm" disabled>
+                                    No Meeting Link
+                                </button>
+                            }
+                            else if (canJoinMeeting)
+                            {
+                                <a href="@booking.MeetingLink" target="_blank" class="btn btn-primary btn-sm">
+                                    Join Meeting
+                                </a>
+                            }
+                            else if (isTooEarlyToJoin)
+                            {
+                                <span class="btn btn-outline-secondary btn-sm disabled">
+                                    Available 5 min before
+                                </span>
+                            }
+                            else if (isSessionEnded)
+                            {
+                                <span class="btn btn-outline-secondary btn-sm disabled">
+                                    Session Ended
+                                </span>
+                            }
+
+                            @if (booking.Review != null)
+                            {
+                                if (booking.Review.IsApproved)
+                                {
+                                    <span class="btn btn-outline-success btn-sm disabled">
+                                        Review Approved
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-outline-warning btn-sm disabled">
+                                        Review Pending
+                                    </span>
+                                }
+                            }
+                            else if (canReview)
+                            {
+                                <a asp-controller="Student"
+                                   asp-action="AddReview"
+                                   asp-route-bookingId="@booking.Id"
+                                   class="btn btn-outline-primary btn-sm">
+                                    Add Review
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-outline-secondary btn-sm disabled">
+                                    Review After Session
+                                </span>
+                            }
+
+                            @if (canSubmitComplaint)
+                            {
+                                <a asp-controller="Student"
+                                   asp-action="SubmitComplaint"
+                                   asp-route-bookingId="@booking.Id"
+                                   class="btn btn-outline-danger btn-sm">
+                                    Complaint
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="btn btn-outline-secondary btn-sm disabled">
+                                    Complaint After Session
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

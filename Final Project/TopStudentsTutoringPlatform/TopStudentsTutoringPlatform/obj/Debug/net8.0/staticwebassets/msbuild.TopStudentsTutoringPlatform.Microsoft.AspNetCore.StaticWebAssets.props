@@ -12,8 +12,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>c2tiyv64ts</Fingerprint>
-      <Integrity>pAGv4ietcJNk/EwsQZ5BN9+K4MuNYS2a9wl4Jw+q9D0=</Integrity>
+      <Fingerprint>igh67avy58</Fingerprint>
+      <Integrity>HiMhLmx+yAqacIwKRJuKs8pKYZMldyBQVHlWlc9rW7w=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\css\site.css'))</OriginalItemSpec>
@@ -35,6 +35,42 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\favicon.ico'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo-full1.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>images/logo-full1.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>x50tvkpy89</Fingerprint>
+      <Integrity>FQUtbRL85oACcA+TP5h1CFSSRCXRG86qbkwY/1DaA6M=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo-full1.png'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo-icon.png'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>images/logo-icon.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>irwc447ujq</Fingerprint>
+      <Integrity>3jSKNifKS1g/wumrg/0HcXmHFRpglGeI1wZhCQdEKTA=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\logo-icon.png'))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\js\site.js'))">
       <SourceType>Package</SourceType>
@@ -1097,6 +1133,186 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\TopStudentsTutoringPlatform.lqupu47nqx.bundle.scp.css'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\50a76bd9-f8ac-4ce4-9295-116468ef904f.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/profile-images/50a76bd9-f8ac-4ce4-9295-116468ef904f.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>rrmx1tibx2</Fingerprint>
+      <Integrity>hwa71w6kpFd42HtEo+HALioSINCQ7f2MZfkpS+5wjTA=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\50a76bd9-f8ac-4ce4-9295-116468ef904f.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\70ca7f39-ee7d-4085-a58c-81ab0e713b12.jpeg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/profile-images/70ca7f39-ee7d-4085-a58c-81ab0e713b12.jpeg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>nh8244beel</Fingerprint>
+      <Integrity>e9txix0wt/twjEmPuV47l5xwDHqTwvAy5WxWpMcb9r0=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\70ca7f39-ee7d-4085-a58c-81ab0e713b12.jpeg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\7e5de758-3f5c-45d3-9e9b-5d7e3a38ae46.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/profile-images/7e5de758-3f5c-45d3-9e9b-5d7e3a38ae46.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>rrmx1tibx2</Fingerprint>
+      <Integrity>hwa71w6kpFd42HtEo+HALioSINCQ7f2MZfkpS+5wjTA=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\7e5de758-3f5c-45d3-9e9b-5d7e3a38ae46.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\ebc7743c-4435-49ec-9442-2713190b8196.jpg'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/profile-images/ebc7743c-4435-49ec-9442-2713190b8196.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>rrmx1tibx2</Fingerprint>
+      <Integrity>hwa71w6kpFd42HtEo+HALioSINCQ7f2MZfkpS+5wjTA=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\profile-images\ebc7743c-4435-49ec-9442-2713190b8196.jpg'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\subject-transcripts\0b037197-7733-4d19-b2d4-5dcc89411bfc.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/subject-transcripts/0b037197-7733-4d19-b2d4-5dcc89411bfc.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>592odorj6a</Fingerprint>
+      <Integrity>l+Fu7Mg6Ebu9F0YilXlEoafeTxkLQRNo229yqLAf8mI=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\subject-transcripts\0b037197-7733-4d19-b2d4-5dcc89411bfc.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\subject-transcripts\7d26197f-0af6-4c0c-affe-ba53d91a218e.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/subject-transcripts/7d26197f-0af6-4c0c-affe-ba53d91a218e.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>592odorj6a</Fingerprint>
+      <Integrity>l+Fu7Mg6Ebu9F0YilXlEoafeTxkLQRNo229yqLAf8mI=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\subject-transcripts\7d26197f-0af6-4c0c-affe-ba53d91a218e.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\44f6e620-9657-4cc4-b530-da646a602782.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/tutor-documents/44f6e620-9657-4cc4-b530-da646a602782.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>2g0cok4m5c</Fingerprint>
+      <Integrity>vsqgB82T3erZxndWaNfO/qwRbQv8C/a5RcETPkYcChU=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\44f6e620-9657-4cc4-b530-da646a602782.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\53d92a5b-5c0f-4534-b309-de514b6059f9.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/tutor-documents/53d92a5b-5c0f-4534-b309-de514b6059f9.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>cuk0xxilzp</Fingerprint>
+      <Integrity>fFFRDJy5ycjp+x6+x2O7S1m1qFSsAyVPZfgJEWusrII=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\53d92a5b-5c0f-4534-b309-de514b6059f9.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\bf0c2f43-fed0-4fca-a5cd-2b27a24c879f.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/tutor-documents/bf0c2f43-fed0-4fca-a5cd-2b27a24c879f.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>i4d93v98k0</Fingerprint>
+      <Integrity>svk6sHGi/fEHIPpgxvAeLTrzTpAHs/rnieBwbm/RHp4=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\bf0c2f43-fed0-4fca-a5cd-2b27a24c879f.pdf'))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\eb121d9b-f849-4688-a40e-f0dccaa28069.pdf'))">
+      <SourceType>Package</SourceType>
+      <SourceId>TopStudentsTutoringPlatform</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/TopStudentsTutoringPlatform</BasePath>
+      <RelativePath>uploads/tutor-documents/eb121d9b-f849-4688-a40e-f0dccaa28069.pdf</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <Fingerprint>upcgj6gg12</Fingerprint>
+      <Integrity>Ym8A1OG3XeMAWEpBQUi3OSqy2bp/eqnMzSxxulmY1uw=</Integrity>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\uploads\tutor-documents\eb121d9b-f849-4688-a40e-f0dccaa28069.pdf'))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>

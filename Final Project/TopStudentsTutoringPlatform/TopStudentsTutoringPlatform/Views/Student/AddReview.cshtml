@@ -1,0 +1,135 @@
+﻿@model TopStudentsTutoringPlatform.Models.Review
+
+@{
+    ViewData["Title"] = "Add Review";
+    var booking = ViewBag.Booking as TopStudentsTutoringPlatform.Models.Booking;
+}
+
+<section class="review-page-hero">
+    <div class="container">
+        <div class="review-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">⭐ Session Review</span>
+
+                    <h1 class="review-title">
+                        Share your learning experience.
+                    </h1>
+
+                    <p class="review-subtitle">
+                        Your review helps other students choose the right tutor. Reviews are submitted
+                        for admin approval before appearing publicly.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Student" asp-action="MyBookings" class="btn btn-light btn-lg">
+                        Back to My Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container review-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="review-form-panel">
+                <div class="section-mini-header">
+                    <span>✍️</span>
+                    <div>
+                        <h3>Write Your Review</h3>
+                        <p>Rate the session and write honest feedback about the tutor.</p>
+                    </div>
+                </div>
+
+                @if (booking != null)
+                {
+                    <div class="review-booking-summary mb-4">
+                        <div>
+                            <span>Reviewing Tutor</span>
+                            <strong>@booking.TutorProfile?.User?.FullName</strong>
+                        </div>
+
+                        <div>
+                            <span>Session Date</span>
+                            <strong>@booking.BookingDate.ToString("yyyy-MM-dd")</strong>
+                        </div>
+
+                        <div>
+                            <span>Time</span>
+                            <strong>@booking.StartTime - @booking.EndTime</strong>
+                        </div>
+                    </div>
+                }
+
+                <form asp-action="AddReview" method="post">
+                    <input type="hidden" asp-for="BookingId" />
+                    <input type="hidden" asp-for="TutorProfileId" />
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="Rating" class="form-label fw-bold">Rating</label>
+                        <select asp-for="Rating" class="form-select form-select-lg" required>
+                            <option value="">Select Rating</option>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="3">3 - Good</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="1">1 - Poor</option>
+                        </select>
+                        <span asp-validation-for="Rating" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Comment" class="form-label fw-bold">Comment</label>
+                        <textarea asp-for="Comment"
+                                  class="form-control"
+                                  rows="6"
+                                  placeholder="Write your feedback about the session, tutor explanation, and learning experience"></textarea>
+                        <span asp-validation-for="Comment" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Submit Review
+                        </button>
+
+                        <a asp-controller="Student" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="review-guidance-card">
+                <div class="feature-icon">🛡️</div>
+                <h4>Review approval</h4>
+                <p>
+                    Your review will not appear immediately. It will be reviewed by the admin first,
+                    then published on the tutor profile after approval.
+                </p>
+            </div>
+
+            <div class="review-guidance-card mt-4">
+                <div class="feature-icon">💡</div>
+                <h4>Helpful review tips</h4>
+
+                <ul class="review-tips">
+                    <li>Be honest and respectful.</li>
+                    <li>Mention the tutor’s explanation quality.</li>
+                    <li>Share whether the session helped you understand the subject.</li>
+                    <li>Avoid personal or unrelated comments.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

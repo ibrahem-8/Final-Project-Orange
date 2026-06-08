@@ -1,0 +1,184 @@
+﻿@model TopStudentsTutoringPlatform.Models.TutorProfile
+
+@{
+    ViewData["Title"] = "Manage Subjects";
+}
+
+<section class="manage-subjects-hero">
+    <div class="container">
+        <div class="manage-subjects-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">📚 Tutor Subjects</span>
+
+                    <h1 class="manage-subjects-title">
+                        Add the subjects you are qualified to teach.
+                    </h1>
+
+                    <p class="manage-subjects-subtitle">
+                        Add only subjects that appear in your academic transcript.
+                        The admin will review your subjects and grades before approving your tutor profile.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container manage-subjects-section">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="subject-form-panel">
+                <div class="section-mini-header">
+                    <span>➕</span>
+                    <div>
+                        <h3>Add Subject</h3>
+                        <p>Enter the subject name and your grade in it.</p>
+                    </div>
+                </div>
+
+                @if (TempData["SubjectSuccess"] != null)
+                {
+                    <div class="alert alert-success premium-alert">
+                        @TempData["SubjectSuccess"]
+                    </div>
+                }
+
+                @if (TempData["SubjectError"] != null)
+                {
+                    <div class="alert alert-danger premium-alert">
+                        @TempData["SubjectError"]
+                    </div>
+                }
+
+                <form asp-controller="Tutor" asp-action="AddSubject" method="post" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Subject Name</label>
+                        <input type="text"
+                               name="subjectName"
+                               class="form-control form-control-lg"
+                               placeholder="Example: Database, ASP.NET, Java"
+                               required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Your Grade</label>
+                        <input type="text"
+                               name="grade"
+                               class="form-control form-control-lg"
+                               placeholder="Example: A, A+, 95, Excellent"
+                               required />
+                        <small class="text-muted">
+                            Use the same grade format shown in your academic transcript.
+                        </small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Transcript / Proof for this Subject</label>
+                        <input type="file"
+                               name="subjectTranscriptFile"
+                               class="form-control"
+                               accept=".pdf,.jpg,.jpeg,.png"
+                               required />
+                        <small class="text-muted">
+                            Upload a transcript or proof showing this subject and grade.
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Add Subject
+                    </button>
+                </form>
+            </div>
+
+            <div class="subject-note-card mt-4">
+                <div class="feature-icon">🛡️</div>
+                <h4>Admin verification</h4>
+                <p>
+                    Your subjects and grades will be compared with your uploaded academic transcript
+                    before your profile becomes visible to students.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="subjects-list-panel">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h3 class="fw-bold mb-1">Your Subjects</h3>
+                        <p class="text-muted mb-0">
+                            These subjects will appear to students after admin approval.
+                        </p>
+                    </div>
+
+                    <span class="result-pill">
+                        @(Model.TutorSubjects != null ? Model.TutorSubjects.Count() : 0) subject(s)
+                    </span>
+                </div>
+
+                @if (Model.TutorSubjects == null || !Model.TutorSubjects.Any())
+                {
+                    <div class="empty-mini-state">
+                        No subjects added yet. Add your first subject from the form.
+                    </div>
+                }
+                else
+                {
+                    <div class="subject-card-grid">
+                        @foreach (var item in Model.TutorSubjects)
+                        {
+                            <div class="subject-grade-card">
+                                <div class="subject-grade-icon">
+                                    📘
+                                </div>
+
+                                <div class="flex-grow-1">
+                                    <span>Subject</span>
+                                    <h5>@item.Subject?.Name</h5>
+
+                                    <small class="text-muted">
+                                        Grade: @item.Grade
+                                    </small>
+
+                                    <div class="mt-2">
+                                        @if (item.VerificationStatus == "Approved")
+                                        {
+                                            <span class="badge bg-success">Approved</span>
+                                        }
+                                        else if (item.VerificationStatus == "Rejected")
+                                        {
+                                            <span class="badge bg-danger">Rejected</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(item.AcademicTranscriptUrl))
+                                        {
+                                            <a href="@item.AcademicTranscriptUrl"
+                                               target="_blank"
+                                               class="btn btn-outline-primary btn-sm ms-2">
+                                                View Proof
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="grade-badge">
+                                    @item.Grade
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

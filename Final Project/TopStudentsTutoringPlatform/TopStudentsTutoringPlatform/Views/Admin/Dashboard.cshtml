@@ -1,0 +1,89 @@
+﻿@model TopStudentsTutoringPlatform.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<section class="admin-dashboard-hero">
+    <div class="container">
+        <div class="admin-dashboard-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🛡️ Admin Control Center</span>
+
+                    <h1 class="admin-dashboard-title">
+                        Monitor platform activity and manage approvals.
+                    </h1>
+
+                    <p class="admin-dashboard-subtitle">
+                        Review tutor applications, approve student reviews, monitor bookings and payments,
+                        and handle complaints from students and tutors.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0 text-lg-end">
+                    <a asp-controller="Admin" asp-action="PendingTutors" class="btn btn-light btn-lg">
+                        Review Pending Tutors
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-dashboard-section">
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon">👥</div>
+                <span>Total Users</span>
+                <strong>@Model.UsersCount</strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon">🎓</div>
+                <span>Total Tutors</span>
+                <strong>@Model.TutorsCount</strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card highlight-warning">
+                <div class="admin-stat-icon">⏳</div>
+                <span>Pending Tutors</span>
+                <strong>@Model.PendingTutorsCount</strong>
+
+                <a asp-controller="Admin" asp-action="PendingTutors" class="btn btn-primary btn-sm mt-3">
+                    View Requests
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card">
+                <div class="admin-stat-icon">📅</div>
+                <span>Total Bookings</span>
+                <strong>@Model.BookingsCount</strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card highlight-danger">
+                <div class="admin-stat-icon">🚩</div>
+                <span>Complaints</span>
+                <strong>@Model.ComplaintsCount</strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="admin-stat-card highlight-success">
+                <div class="admin-stat-icon">💳</div>
+                <span>Payments</span>
+                <strong>@Model.PaymentsCount</strong>
+            </div>
+        </div>
+    </div>
+
+</section>

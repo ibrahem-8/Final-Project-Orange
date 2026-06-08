@@ -1,50 +1,203 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    var isHomePage = currentController == "Home" && currentAction == "Index";
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TopStudentsTutoringPlatform</title>
+    <title>@ViewData["Title"] - Top Students Tutoring</title>
+
+    <link rel="icon" type="image/png" href="~/images/logo-icon.png" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TopStudentsTutoringPlatform.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body class="@(User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin") ? "admin-layout-body" : "")">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TopStudentsTutoringPlatform</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg custom-navbar fixed-top">
+            <div class="container">
+                <a class="navbar-brand brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo-full1.png"
+                         alt="TopStudents Logo"
+                         class="navbar-brand-logo" />
+                </a>
+
+                <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav mx-auto">
+
+                        @if (!User.Identity.IsAuthenticated || !User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                    Home
+                                </a>
+                            </li>
+                        }
+
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="top-tutors">
+                                    Top Tutors
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="about">
+                                    About
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index" asp-fragment="features">
+                                    Features
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Dashboard">Admin Dashboard</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="PendingTutors">Pending Tutors</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Bookings">Bookings</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Admin" asp-action="Complaints">Complaints</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Tutor"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Tutor" asp-action="Dashboard">Tutor Dashboard</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Tutor" asp-action="ManageSubjects">Subjects</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Tutor" asp-action="ManageAvailability">Availability</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Tutor" asp-action="MyBookings">My Bookings</a>
+                                </li>
+                            }
+                            else if (User.IsInRole("Student"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Student" asp-action="Dashboard">Find Tutors</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Student" asp-action="MyBookings">My Bookings</a>
+                                </li>
+                            }
+                        }
                     </ul>
-                    <partial name="_LoginPartial" />
+
+                    <div class="navbar-auth">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-sidebar-icon">🛡️</div>
+                <div>
+                    <h5>Admin Panel</h5>
+                    <span>Management Center</span>
+                </div>
+            </div>
+
+            <nav class="admin-sidebar-nav">
+                <a asp-controller="Admin" asp-action="Dashboard" class="admin-sidebar-link">
+                    <span>📊</span>
+                    Dashboard
+                </a>
+
+                <a asp-controller="Admin" asp-action="Users" class="admin-sidebar-link">
+                    <span>👥</span>
+                    Manage Users
+                </a>
+
+                <a asp-controller="Admin" asp-action="PendingTutors" class="admin-sidebar-link">
+                    <span>🎓</span>
+                    Pending Tutors
+                </a>
+
+                <a asp-controller="Admin" asp-action="PendingSubjects" class="admin-sidebar-link">
+                    <span>📚</span>
+                    Pending Subjects
+                </a>
+
+                <a asp-controller="Admin" asp-action="PendingReviews" class="admin-sidebar-link">
+                    <span>⭐</span>
+                    Pending Reviews
+                </a>
+
+                <a asp-controller="Admin" asp-action="Bookings" class="admin-sidebar-link">
+                    <span>💳</span>
+                    Bookings & Payments
+                </a>
+
+                <a asp-controller="Admin" asp-action="Complaints" class="admin-sidebar-link">
+                    <span>🚩</span>
+                    Complaints
+                </a>
+            </nav>
+        </aside>
+    }
+
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
         <div class="container">
-            &copy; 2026 - TopStudentsTutoringPlatform - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="footer-content">
+                <div>
+                    <strong>TopStudents Tutoring</strong>
+                    <p>Connecting students with verified top academic achievers.</p>
+                </div>
+
+                <div>
+                    <span>&copy; 2026 - TopStudentsTutoringPlatform</span>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

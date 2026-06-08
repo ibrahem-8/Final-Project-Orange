@@ -1,0 +1,118 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.Review>
+
+@{
+    ViewData["Title"] = "Pending Reviews";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">⭐ Review Moderation</span>
+
+                    <h1 class="admin-list-title">
+                        Approve student reviews before publishing.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        Reviews are submitted after completed sessions and remain hidden until the admin approves them.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Pending Reviews</h2>
+            <p class="text-muted mb-0">
+                Approve only suitable and useful feedback.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() review(s)
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h3>No pending reviews</h3>
+            <p>
+                All reviews have been reviewed. New student reviews will appear here.
+            </p>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var review in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="admin-review-card h-100">
+                        <div class="admin-review-top">
+                            <div>
+                                <span class="booking-label">Student</span>
+                                <h4>@review.Student?.FullName</h4>
+                            </div>
+
+                            <span class="rating-badge">
+                                @review.Rating / 5
+                            </span>
+                        </div>
+
+                        <div class="review-info-grid">
+                            <div class="booking-info-item">
+                                <span>Tutor</span>
+                                <strong>@review.TutorProfile?.User?.FullName</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Booking Date</span>
+                                <strong>@review.Booking?.BookingDate.ToString("yyyy-MM-dd")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Submitted At</span>
+                                <strong>@review.CreatedAt.ToString("yyyy-MM-dd HH:mm")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Status</span>
+                                <strong>Pending</strong>
+                            </div>
+                        </div>
+
+                        <div class="review-comment-box mt-4">
+                            <h5>Review Comment</h5>
+                            <p>@review.Comment</p>
+                        </div>
+
+                        <form asp-controller="Admin" asp-action="ApproveReview" method="post" class="mt-4">
+                            <input type="hidden" name="id" value="@review.Id" />
+
+                            <button type="submit" class="btn btn-success w-100">
+                                Approve Review
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

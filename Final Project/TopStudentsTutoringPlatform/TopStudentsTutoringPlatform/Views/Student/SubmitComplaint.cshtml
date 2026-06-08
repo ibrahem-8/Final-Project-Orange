@@ -1,0 +1,134 @@
+﻿@model TopStudentsTutoringPlatform.Models.Complaint
+
+@{
+    ViewData["Title"] = "Submit Complaint";
+    var booking = ViewBag.Booking as TopStudentsTutoringPlatform.Models.Booking;
+}
+
+<section class="complaint-page-hero">
+    <div class="container">
+        <div class="complaint-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🚩 Student Complaint</span>
+
+                    <h1 class="complaint-title">
+                        Report an issue related to your booking.
+                    </h1>
+
+                    <p class="complaint-subtitle">
+                        Submit a clear complaint about a session issue. The admin will review your complaint
+                        and update its status from the management dashboard.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Student" asp-action="MyBookings" class="btn btn-light btn-lg">
+                        Back to My Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container complaint-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="complaint-form-panel">
+                <div class="section-mini-header">
+                    <span>📝</span>
+                    <div>
+                        <h3>Complaint Details</h3>
+                        <p>Explain the issue clearly so the admin can review it properly.</p>
+                    </div>
+                </div>
+
+                @if (booking != null)
+                {
+                    <div class="complaint-booking-summary mb-4">
+                        <div>
+                            <span>Related Tutor</span>
+                            <strong>@booking.TutorProfile?.User?.FullName</strong>
+                        </div>
+
+                        <div>
+                            <span>Subject</span>
+                            <strong>@booking.Subject?.Name</strong>
+                        </div>
+
+                        <div>
+                            <span>Session Date</span>
+                            <strong>@booking.BookingDate.ToString("yyyy-MM-dd")</strong>
+                        </div>
+
+                        <div>
+                            <span>Time</span>
+                            <strong>@booking.StartTime - @booking.EndTime</strong>
+                        </div>
+                    </div>
+                }
+
+                <form asp-action="SubmitComplaint" method="post">
+                    <input type="hidden" asp-for="BookingId" />
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="Title" class="form-label fw-bold">Complaint Title</label>
+                        <input asp-for="Title"
+                               class="form-control form-control-lg"
+                               placeholder="Example: Tutor did not attend the session" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-bold">Description</label>
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="6"
+                                  placeholder="Describe the issue clearly. Include what happened, when it happened, and any important details."></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            Submit Complaint
+                        </button>
+
+                        <a asp-controller="Student" asp-action="MyBookings" class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="complaint-guidance-card">
+                <div class="feature-icon">🛡️</div>
+                <h4>Admin protection</h4>
+                <p>
+                    Your complaint will be visible to the admin only. The admin can mark it as Pending,
+                    In Review, Resolved, or Rejected.
+                </p>
+            </div>
+
+            <div class="complaint-guidance-card mt-4">
+                <div class="feature-icon">💡</div>
+                <h4>What to include?</h4>
+
+                <ul class="complaint-tips">
+                    <li>Write a short and clear title.</li>
+                    <li>Explain the problem with enough details.</li>
+                    <li>Keep the complaint respectful and related to the booking.</li>
+                    <li>You can submit only one complaint for the same booking.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

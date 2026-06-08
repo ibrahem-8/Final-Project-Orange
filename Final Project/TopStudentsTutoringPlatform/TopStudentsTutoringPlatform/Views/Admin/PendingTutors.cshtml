@@ -1,0 +1,193 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.TutorProfile>
+
+@{
+    ViewData["Title"] = "Pending Tutors";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🎓 Tutor Verification</span>
+
+                    <h1 class="admin-list-title">
+                        Review pending tutor applications.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        Check academic documents, university details, subjects, grades, and decide whether each tutor should be approved or rejected.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Pending Tutor Requests</h2>
+            <p class="text-muted mb-0">
+                Review tutor profiles before making them visible to students.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() request(s)
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h3>No pending tutor requests</h3>
+            <p>
+                All tutor applications have been reviewed. New tutor requests will appear here.
+            </p>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var tutor in Model)
+            {
+                var tutorName = tutor.User?.FullName ?? "Tutor";
+                var initials = "TS";
+
+                if (!string.IsNullOrWhiteSpace(tutorName))
+                {
+                    var parts = tutorName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    initials = parts.Length >= 2
+                    ? $"{parts[0][0]}{parts[1][0]}"
+                    : $"{parts[0][0]}";
+                }
+
+                <div class="col-lg-6">
+                    <div class="admin-tutor-review-card h-100">
+                        <div class="admin-tutor-card-top">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="tutor-avatar">
+                                    @initials.ToUpper()
+                                </div>
+
+                                <div>
+                                    <h4>@tutor.User?.FullName</h4>
+                                    <small class="text-muted">@tutor.User?.Email</small>
+                                </div>
+                            </div>
+
+                            <span class="badge bg-warning text-dark">
+                                @tutor.VerificationStatus
+                            </span>
+                        </div>
+
+                        <div class="booking-info-grid mt-4">
+                            <div class="booking-info-item">
+                                <span>University</span>
+                                <strong>@tutor.University</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Major</span>
+                                <strong>@tutor.Major</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>GPA</span>
+                                <strong>@tutor.GPA</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Hourly Rate</span>
+                                <strong>@tutor.HourlyRate JOD</strong>
+                            </div>
+                        </div>
+
+                        <div class="admin-document-panel mt-4">
+                            <h5>Documents</h5>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                @if (!string.IsNullOrEmpty(tutor.AcademicTranscriptUrl))
+                                {
+                                    <a href="@tutor.AcademicTranscriptUrl" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        View Transcript
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-outline-secondary btn-sm disabled">
+                                        No Transcript
+                                    </span>
+                                }
+
+                                @if (!string.IsNullOrEmpty(tutor.CVUrl))
+                                {
+                                    <a href="@tutor.CVUrl" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                        View CV
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-outline-secondary btn-sm disabled">
+                                        No CV
+                                    </span>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="admin-subjects-panel mt-4">
+                            <h5>Subjects & Grades</h5>
+
+                            @if (tutor.TutorSubjects != null && tutor.TutorSubjects.Any())
+                            {
+                                <div class="admin-subject-list">
+                                    @foreach (var item in tutor.TutorSubjects)
+                                    {
+                                        <div class="admin-subject-item">
+                                            <span>@item.Subject?.Name</span>
+                                            <strong>@item.Grade</strong>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="empty-mini-state">
+                                    No subjects added.
+                                </div>
+                            }
+                        </div>
+
+                        <div class="admin-review-actions mt-4">
+                            <form asp-controller="Admin" asp-action="ApproveTutor" method="post">
+                                <input type="hidden" name="id" value="@tutor.Id" />
+                                <button type="submit" class="btn btn-success w-100">
+                                    Approve Tutor
+                                </button>
+                            </form>
+
+                            <form asp-controller="Admin" asp-action="RejectTutor" method="post">
+                                <input type="hidden" name="id" value="@tutor.Id" />
+                                <button type="submit" class="btn btn-outline-danger w-100">
+                                    Reject Tutor
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

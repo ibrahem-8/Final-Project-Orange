@@ -1,0 +1,107 @@
+﻿@model TopStudentsTutoringPlatform.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<section class="profile-page-hero">
+    <div class="container">
+        <div class="profile-page-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">✏️ Edit Profile</span>
+
+                    <h1 class="profile-page-title">
+                        Update your personal information.
+                    </h1>
+
+                    <p class="profile-page-subtitle">
+                        Keep your name, address, and profile image updated so your account looks professional across the platform.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Profile" asp-action="Index" class="btn btn-light btn-lg">
+                        Back to Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container profile-page-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="profile-edit-card">
+                <div class="section-mini-header">
+                    <span>👤</span>
+                    <div>
+                        <h3>Edit Account Details</h3>
+                        <p>Update your profile information below.</p>
+                    </div>
+                </div>
+
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-4">
+                        <label asp-for="FullName" class="form-label fw-bold">Full Name</label>
+                        <input asp-for="FullName" class="form-control form-control-lg" placeholder="Enter your full name" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Address" class="form-label fw-bold">Address</label>
+                        <input asp-for="Address" class="form-control form-control-lg" placeholder="Example: Amman, Jordan" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="upload-zone mb-4">
+                        <div class="upload-icon">🖼️</div>
+                        <div class="flex-grow-1">
+                            <label class="form-label fw-bold">Profile Image</label>
+                            <input type="file"
+                                   name="profileImageFile"
+                                   class="form-control"
+                                   accept=".jpg,.jpeg,.png,.webp" />
+                            <small class="text-muted">
+                                Upload a JPG, JPEG, PNG, or WEBP image. If you do not upload a new image, your current image will stay the same.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Save Changes
+                        </button>
+
+                        <a asp-controller="Profile" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="profile-details-card">
+                <div class="feature-icon">💡</div>
+                <h4>Profile tips</h4>
+
+                <ul class="profile-steps">
+                    <li>Use your real full name for better trust.</li>
+                    <li>Keep your address general, like city and country.</li>
+                    <li>Use a professional image URL if available.</li>
+                    <li>Your email and role are managed by the system.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

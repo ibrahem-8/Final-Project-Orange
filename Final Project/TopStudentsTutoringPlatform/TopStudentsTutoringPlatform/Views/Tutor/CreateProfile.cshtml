@@ -1,0 +1,188 @@
+﻿@model TopStudentsTutoringPlatform.Models.TutorProfile
+
+@{
+    ViewData["Title"] = "Create Tutor Profile";
+}
+
+<section class="create-profile-hero">
+    <div class="container">
+        <div class="create-profile-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">📝 Tutor Verification</span>
+
+                    <h1 class="create-profile-title">
+                        Create your academic tutor profile.
+                    </h1>
+
+                    <p class="create-profile-subtitle">
+                        Submit your university information, GPA, hourly rate, academic transcript,
+                        and CV. The admin will review your profile before making it visible to students.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container create-profile-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="create-profile-form-panel">
+                <div class="section-mini-header">
+                    <span>🎓</span>
+                    <div>
+                        <h3>Profile Information</h3>
+                        <p>Fill in your academic details accurately for admin verification.</p>
+                    </div>
+                </div>
+
+                <form asp-action="CreateProfile" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="University" class="form-label fw-bold">University</label>
+                            <input asp-for="University" class="form-control form-control-lg" placeholder="Example: Applied Science Private University" />
+                            <span asp-validation-for="University" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Major" class="form-label fw-bold">Major</label>
+                            <input asp-for="Major" class="form-control form-control-lg" placeholder="Example: Data Science and AI" />
+                            <span asp-validation-for="Major" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="GPA" class="form-label fw-bold">GPA</label>
+                            <input asp-for="GPA" class="form-control form-control-lg" placeholder="Example: 3.75" />
+                            <span asp-validation-for="GPA" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="HourlyRate" class="form-label fw-bold">Hourly Rate</label>
+                            <input asp-for="HourlyRate" class="form-control form-control-lg" placeholder="Example: 10" />
+                            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Subjects" class="form-label fw-bold">General Subjects Summary</label>
+                        <input asp-for="Subjects" class="form-control form-control-lg" placeholder="Example: Database, ASP.NET, Java" />
+                        <span asp-validation-for="Subjects" class="text-danger"></span>
+                        <small class="text-muted">
+                            You will add detailed subjects and grades later from Manage Subjects.
+                        </small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold">First Subject</label>
+                            <input type="text"
+                                   name="initialSubjectName"
+                                   class="form-control form-control-lg"
+                                   placeholder="Example: Database"
+                                   required />
+                            <small class="text-muted">
+                                Add at least one subject that appears in your transcript.
+                            </small>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold">Subject Grade</label>
+                            <input type="text"
+                                   name="initialGrade"
+                                   class="form-control form-control-lg"
+                                   placeholder="Example: A, A+, 95"
+                                   required />
+                            <small class="text-muted">
+                                Enter the grade exactly as shown in your transcript.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Bio" class="form-label fw-bold">Bio</label>
+                        <textarea asp-for="Bio"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Write a short description about your academic experience and teaching style"></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
+
+                    <div class="upload-zone mb-4">
+                        <div class="upload-icon">📄</div>
+                        <div class="flex-grow-1">
+                            <label class="form-label fw-bold">Academic Transcript</label>
+                            <input type="file"
+                                   name="academicTranscriptFile"
+                                   class="form-control"
+                                   accept=".pdf,.jpg,.jpeg,.png"
+                                   required />
+                            <small class="text-muted">
+                                Required. Upload your transcript as proof of your subjects, grades, GPA, and university.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="upload-zone mb-4">
+                        <div class="upload-icon">📁</div>
+                        <div class="flex-grow-1">
+                            <label class="form-label fw-bold">CV Optional</label>
+                            <input type="file"
+                                   name="cvFile"
+                                   class="form-control"
+                                   accept=".pdf,.doc,.docx" />
+                            <small class="text-muted">
+                                Optional. Upload your CV if available to strengthen your profile.
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Submit for Approval
+                        </button>
+
+                        <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="profile-guidance-card">
+                <div class="feature-icon">✅</div>
+                <h4>What happens next?</h4>
+
+                <ul class="profile-steps">
+                    <li>Your profile will be saved as Pending.</li>
+                    <li>The admin reviews your transcript and academic details.</li>
+                    <li>After approval, your profile becomes visible to students.</li>
+                    <li>You can add subjects, grades, and availability from your dashboard.</li>
+                </ul>
+            </div>
+
+            <div class="profile-guidance-card mt-4">
+                <div class="feature-icon">🔒</div>
+                <h4>Verification matters</h4>
+                <p class="text-muted mb-0">
+                    Students trust tutors more when academic documents, grades, and teaching subjects
+                    are reviewed before becoming public.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

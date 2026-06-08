@@ -1,0 +1,148 @@
+﻿@model TopStudentsTutoringPlatform.Models.TutorProfile
+
+@{
+    ViewData["Title"] = "Manage Availability";
+}
+
+<section class="manage-availability-hero">
+    <div class="container">
+        <div class="manage-availability-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">⏰ Tutor Availability</span>
+
+                    <h1 class="manage-availability-title">
+                        Control when students can book sessions with you.
+                    </h1>
+
+                    <p class="manage-availability-subtitle">
+                        Add your weekly available time slots. Students will only be able to book sessions
+                        based on these active availability records.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container manage-availability-section">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="availability-form-panel">
+                <div class="section-mini-header">
+                    <span>➕</span>
+                    <div>
+                        <h3>Add Available Time</h3>
+                        <p>Choose the day and time range when you can teach.</p>
+                    </div>
+                </div>
+
+                <form asp-controller="Tutor" asp-action="AddAvailability" method="post">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Day of Week</label>
+                        <select name="dayOfWeek" class="form-select form-select-lg" required>
+                            <option value="">Select Day</option>
+                            <option value="Sunday">Sunday</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold">Start Time</label>
+                            <input type="time" name="startTime" class="form-control form-control-lg" required />
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label fw-bold">End Time</label>
+                            <input type="time" name="endTime" class="form-control form-control-lg" required />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Add Availability
+                    </button>
+                </form>
+            </div>
+
+            <div class="availability-note-card mt-4">
+                <div class="feature-icon">📌</div>
+                <h4>Booking protection</h4>
+                <p>
+                    Students cannot choose random times. The booking system only allows them
+                    to select from your active availability.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="availability-list-panel">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h3 class="fw-bold mb-1">Your Availability</h3>
+                        <p class="text-muted mb-0">
+                            These time slots will be shown to students on your profile.
+                        </p>
+                    </div>
+
+                    <span class="result-pill">
+                        @(Model.TutorAvailabilities != null ? Model.TutorAvailabilities.Count() : 0) slot(s)
+                    </span>
+                </div>
+
+                @if (Model.TutorAvailabilities == null || !Model.TutorAvailabilities.Any())
+                {
+                    <div class="empty-mini-state">
+                        No availability added yet. Add your first available time from the form.
+                    </div>
+                }
+                else
+                {
+                    <div class="availability-card-grid">
+                        @foreach (var item in Model.TutorAvailabilities)
+                        {
+                            <div class="availability-slot-card">
+                                <div class="availability-slot-icon">
+                                    ⏱️
+                                </div>
+
+                                <div class="flex-grow-1">
+                                    <span>Available Day</span>
+                                    <h5>@item.DayOfWeek</h5>
+
+                                    <p class="mb-0 text-muted">
+                                        @item.StartTime - @item.EndTime
+                                    </p>
+                                </div>
+
+                                @if (item.IsActive)
+                                {
+                                    <span class="availability-status active">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="availability-status inactive">
+                                        Inactive
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

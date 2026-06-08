@@ -1,5 +1,7 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\logo-full1.png
+wwwroot\images\logo-icon.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map
@@ -58,3 +60,13 @@ wwwroot\lib\jquery-validation\LICENSE.md
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js
 wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js
 wwwroot\lib\jquery-validation-unobtrusive\LICENSE.txt
+wwwroot\uploads\profile-images\50a76bd9-f8ac-4ce4-9295-116468ef904f.jpg
+wwwroot\uploads\profile-images\70ca7f39-ee7d-4085-a58c-81ab0e713b12.jpeg
+wwwroot\uploads\profile-images\7e5de758-3f5c-45d3-9e9b-5d7e3a38ae46.jpg
+wwwroot\uploads\profile-images\ebc7743c-4435-49ec-9442-2713190b8196.jpg
+wwwroot\uploads\subject-transcripts\0b037197-7733-4d19-b2d4-5dcc89411bfc.pdf
+wwwroot\uploads\subject-transcripts\7d26197f-0af6-4c0c-affe-ba53d91a218e.pdf
+wwwroot\uploads\tutor-documents\44f6e620-9657-4cc4-b530-da646a602782.pdf
+wwwroot\uploads\tutor-documents\53d92a5b-5c0f-4534-b309-de514b6059f9.pdf
+wwwroot\uploads\tutor-documents\bf0c2f43-fed0-4fca-a5cd-2b27a24c879f.pdf
+wwwroot\uploads\tutor-documents\eb121d9b-f849-4688-a40e-f0dccaa28069.pdf

@@ -17,7 +17,7 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.14")
+                .HasAnnotation("ProductVersion", "8.0.23")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -254,6 +254,9 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("EducationalPackageId")
+                        .HasColumnType("int");
+
                     b.Property<TimeSpan>("EndTime")
                         .HasColumnType("time");
 
@@ -282,6 +285,8 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EducationalPackageId");
 
                     b.HasIndex("StudentId");
 
@@ -346,8 +351,11 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfHours")
                         .HasColumnType("int");
@@ -355,15 +363,20 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int>("TutorProfileId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
 
                     b.HasIndex("TutorProfileId");
 
@@ -440,6 +453,9 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Rating")
                         .HasColumnType("int");
@@ -528,8 +544,16 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AcademicTranscriptUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Bio")
                         .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("CVUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -581,11 +605,26 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AcademicTranscriptUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Grade")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
                     b.Property<int>("TutorProfileId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VerificationStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -649,6 +688,10 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
             modelBuilder.Entity("TopStudentsTutoringPlatform.Models.Booking", b =>
                 {
+                    b.HasOne("TopStudentsTutoringPlatform.Models.EducationalPackage", "EducationalPackage")
+                        .WithMany()
+                        .HasForeignKey("EducationalPackageId");
+
                     b.HasOne("TopStudentsTutoringPlatform.Models.ApplicationUser", "Student")
                         .WithMany()
                         .HasForeignKey("StudentId")
@@ -666,6 +709,8 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
                         .HasForeignKey("TutorProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("EducationalPackage");
 
                     b.Navigation("Student");
 
@@ -694,11 +739,19 @@ namespace TopStudentsTutoringPlatform.Data.Migrations
 
             modelBuilder.Entity("TopStudentsTutoringPlatform.Models.EducationalPackage", b =>
                 {
+                    b.HasOne("TopStudentsTutoringPlatform.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TopStudentsTutoringPlatform.Models.TutorProfile", "TutorProfile")
                         .WithMany("EducationalPackages")
                         .HasForeignKey("TutorProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Subject");
 
                     b.Navigation("TutorProfile");
                 });

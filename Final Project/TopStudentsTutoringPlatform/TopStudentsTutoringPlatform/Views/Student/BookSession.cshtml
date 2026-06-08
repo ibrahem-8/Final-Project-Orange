@@ -1,0 +1,165 @@
+﻿@model TopStudentsTutoringPlatform.Models.Booking
+
+@{
+    ViewData["Title"] = "Book Session";
+    var tutor = ViewBag.Tutor as TopStudentsTutoringPlatform.Models.TutorProfile;
+    var tutorSubjects = ViewBag.TutorSubjects as List<TopStudentsTutoringPlatform.Models.TutorSubject>;
+    var tutorAvailabilities = ViewBag.TutorAvailabilities as List<TopStudentsTutoringPlatform.Models.TutorAvailability>;
+}
+
+<section class="booking-page-hero">
+    <div class="container">
+        <div class="booking-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">📅 Book Your Session</span>
+
+                    <h1 class="booking-title">
+                        Schedule a session with
+                        <span class="text-gradient">@tutor?.User?.FullName</span>
+                    </h1>
+
+                    <p class="booking-subtitle">
+                        Choose one of the tutor’s approved subjects and available time slots.
+                        Your meeting link and payment record will be created automatically after booking.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    @if (tutor != null)
+                    {
+                        <div class="booking-summary-card">
+                            <div class="summary-row">
+                                <span>Tutor</span>
+                                <strong>@tutor.User?.FullName</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Major</span>
+                                <strong>@tutor.Major</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Hourly Rate</span>
+                                <strong>@tutor.HourlyRate JOD</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Status</span>
+                                <strong class="text-success">Verified</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container booking-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="booking-form-panel">
+                <div class="section-mini-header">
+                    <span>📝</span>
+                    <div>
+                        <h3>Booking Details</h3>
+                        <p>Select the subject, session date, and available time.</p>
+                    </div>
+                </div>
+
+                <form asp-action="BookSession" method="post">
+                    <input type="hidden" asp-for="TutorProfileId" />
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="SubjectId" class="form-label fw-bold">Subject</label>
+                        <select asp-for="SubjectId" class="form-select form-select-lg" required>
+                            <option value="">Select Subject</option>
+
+                            @if (tutorSubjects != null && tutorSubjects.Any())
+                            {
+                                foreach (var item in tutorSubjects)
+                                {
+                                    <option value="@item.SubjectId">
+                                        @item.Subject?.Name - Grade: @item.Grade
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="SubjectId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="BookingDate" class="form-label fw-bold">Booking Date</label>
+                        <input asp-for="BookingDate" type="date" class="form-control form-control-lg" />
+                        <span asp-validation-for="BookingDate" class="text-danger"></span>
+                        <small class="text-muted">
+                            The selected date must match the day of the available time.
+                        </small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Available Time</label>
+                        <select name="availabilityId" class="form-select form-select-lg" required>
+                            <option value="">Select Available Time</option>
+
+                            @if (tutorAvailabilities != null && tutorAvailabilities.Any())
+                            {
+                                foreach (var availability in tutorAvailabilities)
+                                {
+                                    <option value="@availability.Id">
+                                        @availability.DayOfWeek - @availability.StartTime to @availability.EndTime
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <small class="text-muted">
+                            You can only book from the tutor's active availability.
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Confirm Booking
+                        </button>
+
+                        <a asp-controller="Student"
+                           asp-action="TutorDetails"
+                           asp-route-id="@Model.TutorProfileId"
+                           class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="booking-help-panel">
+                <div class="feature-icon">💡</div>
+                <h4>Before you book</h4>
+
+                <ul class="booking-tips">
+                    <li>Choose a subject that the tutor is approved to teach.</li>
+                    <li>Pick a date that matches the selected availability day.</li>
+                    <li>A meeting link will be generated automatically.</li>
+                    <li>Payment will be completed from your bookings page using Stripe.</li>
+                </ul>
+            </div>
+
+            <div class="booking-help-panel mt-4">
+                <div class="feature-icon">🛡️</div>
+                <h4>Protected learning</h4>
+                <p class="text-muted mb-0">
+                    Reviews are allowed only after sessions end, and complaints can be submitted for booking-related issues.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

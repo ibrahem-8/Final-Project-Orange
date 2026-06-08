@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ibrahem Abu Othman\\Desktop\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj": {}
+    "C:\\Users\\Ibrahem Abu Othman\\source\\repos\\Final-Project-Orange\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ibrahem Abu Othman\\Desktop\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj": {
+    "C:\\Users\\Ibrahem Abu Othman\\source\\repos\\Final-Project-Orange\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ibrahem Abu Othman\\Desktop\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj",
+        "projectUniqueName": "C:\\Users\\Ibrahem Abu Othman\\source\\repos\\Final-Project-Orange\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj",
         "projectName": "TopStudentsTutoringPlatform",
-        "projectPath": "C:\\Users\\Ibrahem Abu Othman\\Desktop\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj",
+        "projectPath": "C:\\Users\\Ibrahem Abu Othman\\source\\repos\\Final-Project-Orange\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform.csproj",
         "packagesPath": "C:\\Users\\Ibrahem Abu Othman\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ibrahem Abu Othman\\Desktop\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\obj\\",
+        "outputPath": "C:\\Users\\Ibrahem Abu Othman\\source\\repos\\Final-Project-Orange\\Final Project\\TopStudentsTutoringPlatform\\TopStudentsTutoringPlatform\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -56,19 +56,33 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.14, )"
+              "version": "[8.0.23, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
-              "version": "[8.0.14, )"
+              "version": "[8.0.23, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.14, )"
+              "version": "[8.0.23, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[8.0.23, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.14, )"
+              "version": "[8.0.23, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.23, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[51.2.0, )"
             }
           },
           "imports": [

@@ -1,8 +1,438 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        🎓 Peer Learning Platform
+                    </div>
+
+                    <h1 class="hero-title">
+                        Learn from
+                        <span class="text-gradient">top students</span>
+                        who already mastered your courses.
+                    </h1>
+
+                    <p class="hero-description">
+                        TopStudents connects learners with verified high-achieving students.
+                        Search tutors, compare academic profiles, book online sessions,
+                        pay securely, join meetings, and review your learning experience.
+                    </p>
+
+                    <div class="hero-actions">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            if (User.IsInRole("Student"))
+                            {
+                                <a asp-controller="Student" asp-action="Dashboard" class="btn btn-primary btn-lg">
+                                    Find Tutors
+                                </a>
+                                <a asp-controller="Student" asp-action="MyBookings" class="btn btn-outline-primary btn-lg">
+                                    My Bookings
+                                </a>
+                            }
+                            else if (User.IsInRole("Tutor"))
+                            {
+                                <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-primary btn-lg">
+                                    Tutor Dashboard
+                                </a>
+                                <a asp-controller="Tutor" asp-action="MyBookings" class="btn btn-outline-primary btn-lg">
+                                    My Bookings
+                                </a>
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary btn-lg">
+                                    Admin Dashboard
+                                </a>
+                                <a asp-controller="Admin" asp-action="Bookings" class="btn btn-outline-primary btn-lg">
+                                    Manage Bookings
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg">
+                                Get Started
+                            </a>
+                            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-lg">
+                                Login
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="hero-visual">
+                    <div class="hero-dashboard-card floating-card">
+                        <div class="hero-dashboard-inner">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h4 class="mb-1">Live Learning Dashboard</h4>
+                                    <small class="text-white-50">Verified tutors • Secure booking</small>
+                                </div>
+                                <span class="badge bg-success">Online</span>
+                            </div>
+
+                            <div class="dashboard-pill">
+                                <div class="d-flex justify-content-between">
+                                    <span>Database Tutor</span>
+                                    <strong>4.9 ★</strong>
+                                </div>
+                                <small class="text-white-50">GPA 3.8 • Grade A</small>
+                            </div>
+
+                            <div class="dashboard-pill">
+                                <div class="d-flex justify-content-between">
+                                    <span>Upcoming Session</span>
+                                    <strong>Today</strong>
+                                </div>
+                                <small class="text-white-50">Sunday • 16:00 - 18:00</small>
+                            </div>
+
+                            <div class="dashboard-pill">
+                                <div class="d-flex justify-content-between">
+                                    <span>Payment Status</span>
+                                    <strong class="text-success">Paid</strong>
+                                </div>
+                                <small class="text-white-50">Stripe Checkout connected</small>
+                            </div>
+
+                            <div class="dashboard-pill">
+                                <div class="d-flex justify-content-between">
+                                    <span>Meeting Link</span>
+                                    <strong>Ready</strong>
+                                </div>
+                                <small class="text-white-50">Join directly from the platform</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@{
+    var topTutors = ViewBag.TopTutors as IEnumerable<dynamic>;
+}
+
+<section id="top-tutors" class="top-tutors-section">
+    <div class="container">
+        <div class="section-center-header">
+            <span class="hero-badge">⭐ Top Verified Tutors</span>
+
+            <h2 class="section-heading">
+                Learn from the best top-student tutors.
+            </h2>
+
+            <p class="section-description">
+                Discover highly rated verified tutors with approved subjects, strong academic profiles,
+                and trusted student reviews.
+            </p>
+        </div>
+
+        @if (topTutors == null || !topTutors.Any())
+        {
+            <div class="empty-state mt-4">
+                <div class="empty-icon">🎓</div>
+                <h3>No top tutors available yet</h3>
+                <p>
+                    Approved tutors will appear here once the admin verifies their profiles and subjects.
+                </p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4 mt-3">
+                @foreach (var item in topTutors)
+                {
+                    var tutor = item.Tutor as TopStudentsTutoringPlatform.Models.TutorProfile;
+                    var subjects = item.ApprovedSubjects as List<TopStudentsTutoringPlatform.Models.TutorSubject>;
+                    double averageRating = item.AverageRating;
+                    int reviewsCount = item.ReviewsCount;
+
+                    var tutorName = tutor?.User?.FullName ?? "Tutor";
+                    var initials = "TS";
+
+                    if (!string.IsNullOrWhiteSpace(tutorName))
+                    {
+                        var parts = tutorName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        initials = parts.Length >= 2
+                        ? $"{parts[0][0]}{parts[1][0]}"
+                        : $"{parts[0][0]}";
+                    }
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="top-tutor-card">
+                            <div class="top-tutor-glow"></div>
+
+                            <div class="top-tutor-header">
+                                @if (!string.IsNullOrWhiteSpace(tutor?.User?.ProfileImageUrl))
+                                {
+                                    <img src="@tutor.User.ProfileImageUrl"
+                                         alt="@tutorName"
+                                         class="top-tutor-image" />
+                                }
+                                else
+                                {
+                                    <div class="top-tutor-avatar">
+                                        @initials.ToUpper()
+                                    </div>
+                                }
+
+                                <div>
+                                    <h4>@tutorName</h4>
+                                    <p>@tutor?.Major</p>
+                                </div>
+                            </div>
+
+                            <div class="top-tutor-meta">
+                                <span>🎓 @tutor?.University</span>
+                                <span>📊 GPA @tutor?.GPA</span>
+                            </div>
+
+                            <div class="top-tutor-rating">
+                                @if (averageRating > 0)
+                                {
+                                    <strong>⭐ @averageRating.ToString("0.0")</strong>
+                                    <span>@reviewsCount review(s)</span>
+                                }
+                                else
+                                {
+                                    <strong>⭐ New Tutor</strong>
+                                    <span>No reviews yet</span>
+                                }
+                            </div>
+
+                            <div class="top-tutor-subjects">
+                                @if (subjects != null && subjects.Any())
+                                {
+                                    foreach (var subject in subjects.Take(3))
+                                    {
+                                        <span>@subject.Subject?.Name</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>No approved subjects yet</span>
+                                }
+                            </div>
+
+                            <div class="top-tutor-footer">
+                                <div>
+                                    <span>Hourly Rate</span>
+                                    <strong>@tutor?.HourlyRate JOD</strong>
+                                </div>
+
+                                <a asp-controller="Student"
+                                   asp-action="TutorDetails"
+                                   asp-route-id="@tutor?.Id"
+                                   class="btn btn-primary">
+                                    View Tutor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <div class="text-center mt-5">
+            <a asp-controller="Student"
+               asp-action="Dashboard"
+               class="btn btn-outline-primary btn-lg">
+                Explore All Tutors
+            </a>
+        </div>
+    </div>
+</section>
+
+<section id="About" class="section-padding">
+    <div class="container text-center">
+        <h2 class="section-title">How the platform works</h2>
+        <p class="section-subtitle">
+            A simple academic marketplace that helps students find trusted peer tutors and helps top students offer their knowledge professionally.
+        </p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Tutors get verified</h4>
+                    <p class="text-muted">
+                        Top students create profiles, upload academic transcripts, add subjects and grades, then wait for admin approval.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Students search and book</h4>
+                    <p class="text-muted">
+                        Students search by subject, university, major, or tutor name, then book sessions from available tutor times.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Learn, pay, and review</h4>
+                    <p class="text-muted">
+                        Students pay with Stripe, join meeting links, attend sessions, and submit reviews after the session ends.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="section-padding bg-white">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-title">Powerful features for real learning</h2>
+            <p class="section-subtitle">
+                The system includes the core tools needed for a secure and organized tutoring experience.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h4>Verified Top Students</h4>
+                    <p class="text-muted">
+                        Tutors are approved by the admin after reviewing their transcript, GPA, subjects, and grades.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h4>Smart Booking</h4>
+                    <p class="text-muted">
+                        Students can only book from the tutor’s actual available times and valid teaching subjects.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">💳</div>
+                    <h4>Stripe Payments</h4>
+                    <p class="text-muted">
+                        Payments are handled through Stripe Checkout with clear tracking for amount, commission, and tutor earnings.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h4>Approved Reviews</h4>
+                    <p class="text-muted">
+                        Students can review tutors only after sessions end, and reviews appear publicly after admin approval.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h4>Complaints Protection</h4>
+                    <p class="text-muted">
+                        Students and tutors can submit complaints related to bookings, and admins can manage complaint status.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🎥</div>
+                    <h4>Online Meetings</h4>
+                    <p class="text-muted">
+                        Each booking includes a meeting link so students and tutors can join online sessions easily.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <p class="mb-0 text-muted">User Roles</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <p class="mb-0 text-muted">Verified Tutors</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <p class="mb-0 text-muted">Booking Access</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-number">Stripe</div>
+                    <p class="mb-0 text-muted">Secure Payments</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="cta-section text-center">
+            <h2 class="section-title">Ready to learn smarter?</h2>
+            <p class="section-subtitle text-white-50">
+                Join a platform built for students who want trusted academic support and top students who want to share their knowledge.
+            </p>
+
+            @if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-light btn-lg">
+                    Create Your Account
+                </a>
+            }
+            else if (User.IsInRole("Student"))
+            {
+                <a asp-controller="Student" asp-action="Dashboard" class="btn btn-light btn-lg">
+                    Find Tutors Now
+                </a>
+            }
+            else if (User.IsInRole("Tutor"))
+            {
+                <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-light btn-lg">
+                    Go to Tutor Dashboard
+                </a>
+            }
+            else if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                    Go to Admin Dashboard
+                </a>
+            }
+        </div>
+    </div>
+</section>

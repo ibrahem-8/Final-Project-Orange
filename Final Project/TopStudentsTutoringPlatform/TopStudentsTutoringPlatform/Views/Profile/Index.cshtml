@@ -1,0 +1,133 @@
+﻿@model TopStudentsTutoringPlatform.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "My Profile";
+    var roles = ViewBag.Roles as IList<string>;
+    var roleText = roles != null && roles.Any() ? string.Join(", ", roles) : "User";
+
+    var initials = "U";
+
+    if (!string.IsNullOrWhiteSpace(Model.FullName))
+    {
+        var parts = Model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        initials = parts.Length >= 2
+            ? $"{parts[0][0]}{parts[1][0]}"
+            : $"{parts[0][0]}";
+    }
+}
+
+<section class="profile-page-hero">
+    <div class="container">
+        <div class="profile-page-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">👤 My Profile</span>
+
+                    <h1 class="profile-page-title">
+                        Manage your personal account information.
+                    </h1>
+
+                    <p class="profile-page-subtitle">
+                        View your account details, role, contact information, and update your personal profile whenever needed.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Profile" asp-action="Edit" class="btn btn-light btn-lg">
+                        Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container profile-page-section">
+
+    @if (TempData["ProfileSuccess"] != null)
+    {
+        <div class="alert alert-success premium-alert">
+            @TempData["ProfileSuccess"]
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="profile-side-card">
+                @if (!string.IsNullOrWhiteSpace(Model.ProfileImageUrl))
+                {
+                    <img src="@Model.ProfileImageUrl" alt="Profile Image" class="profile-image-large" />
+                }
+                else
+                {
+                    <div class="profile-avatar-large">
+                        @initials.ToUpper()
+                    </div>
+                }
+
+                <h3>@Model.FullName</h3>
+                <p class="text-muted mb-2">@Model.Email</p>
+
+                <span class="verified-badge">
+                    @roleText
+                </span>
+
+                <a asp-controller="Profile" asp-action="Edit" class="btn btn-primary w-100 mt-4">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="profile-details-card">
+                <div class="section-mini-header">
+                    <span>📋</span>
+                    <div>
+                        <h3>Account Details</h3>
+                        <p>Your basic platform account information.</p>
+                    </div>
+                </div>
+
+                <div class="profile-info-grid">
+                    <div class="booking-info-item">
+                        <span>Full Name</span>
+                        <strong>@Model.FullName</strong>
+                    </div>
+
+                    <div class="booking-info-item">
+                        <span>Email</span>
+                        <strong>@Model.Email</strong>
+                    </div>
+
+                    <div class="booking-info-item">
+                        <span>Role</span>
+                        <strong>@roleText</strong>
+                    </div>
+
+                    <div class="booking-info-item">
+                        <span>Email Confirmed</span>
+                        <strong>@(Model.EmailConfirmed ? "Yes" : "No")</strong>
+                    </div>
+
+                    <div class="booking-info-item">
+                        <span>Address</span>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.Address) ? "Not added" : Model.Address)</strong>
+                    </div>
+
+                    <div class="booking-info-item">
+                        <span>Created At</span>
+                        <strong>@Model.CreatedAt.ToString("yyyy-MM-dd")</strong>
+                    </div>
+                </div>
+
+                <div class="profile-note-box mt-4">
+                    <h5>Profile information</h5>
+                    <p>
+                        Your name is displayed in the navbar and across the platform. Keep your information updated
+                        so students, tutors, and admins can identify your account clearly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,144 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.Complaint>
+
+@{
+    ViewData["Title"] = "Complaints";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🛡️ Complaint Management</span>
+
+                    <h1 class="admin-list-title">
+                        Review and manage platform complaints.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        Track complaints submitted by students or tutors, review the related booking,
+                        and update the complaint status based on the admin decision.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Manage Complaints</h2>
+            <p class="text-muted mb-0">
+                Review booking-related issues and update their resolution status.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() complaint(s)
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h3>No complaints found</h3>
+            <p>
+                Complaints submitted by students or tutors will appear here.
+            </p>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var complaint in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="admin-complaint-card h-100">
+                        <div class="admin-complaint-top">
+                            <div>
+                                <span class="booking-label">Submitted By</span>
+                                <h4>@complaint.SubmittedBy?.FullName</h4>
+                                <small class="text-muted">@complaint.SubmittedBy?.Email</small>
+                            </div>
+
+                            @if (complaint.Status == "Resolved")
+                            {
+                                <span class="complaint-status resolved">Resolved</span>
+                            }
+                            else if (complaint.Status == "Rejected")
+                            {
+                                <span class="complaint-status rejected">Rejected</span>
+                            }
+                            else if (complaint.Status == "In Review")
+                            {
+                                <span class="complaint-status in-review">In Review</span>
+                            }
+                            else
+                            {
+                                <span class="complaint-status pending">Pending</span>
+                            }
+                        </div>
+
+                        <div class="booking-info-grid mt-4">
+                            <div class="booking-info-item">
+                                <span>Related Tutor</span>
+                                <strong>@(complaint.Booking?.TutorProfile?.User?.FullName ?? "-")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Subject</span>
+                                <strong>@(complaint.Booking?.Subject?.Name ?? "-")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Submitted At</span>
+                                <strong>@complaint.CreatedAt.ToString("yyyy-MM-dd HH:mm")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Current Status</span>
+                                <strong>@complaint.Status</strong>
+                            </div>
+                        </div>
+
+                        <div class="complaint-content-box mt-4">
+                            <h5>@complaint.Title</h5>
+                            <p>@complaint.Description</p>
+                        </div>
+
+                        <div class="complaint-update-box mt-4">
+                            <h5>Update Complaint Status</h5>
+
+                            <form asp-controller="Admin" asp-action="UpdateComplaintStatus" method="post">
+                                <input type="hidden" name="id" value="@complaint.Id" />
+
+                                <select name="status" class="form-select mb-3">
+                                    <option value="Pending" selected="@(complaint.Status == "Pending")">Pending</option>
+                                    <option value="In Review" selected="@(complaint.Status == "In Review")">In Review</option>
+                                    <option value="Resolved" selected="@(complaint.Status == "Resolved")">Resolved</option>
+                                    <option value="Rejected" selected="@(complaint.Status == "Rejected")">Rejected</option>
+                                </select>
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Update Status
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

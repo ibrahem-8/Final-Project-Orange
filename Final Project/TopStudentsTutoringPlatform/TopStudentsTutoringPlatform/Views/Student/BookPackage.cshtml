@@ -1,0 +1,185 @@
+﻿@model TopStudentsTutoringPlatform.Models.Booking
+
+@{
+    ViewData["Title"] = "Book Package";
+
+    var package = ViewBag.Package as TopStudentsTutoringPlatform.Models.EducationalPackage;
+    var tutor = package?.TutorProfile;
+    var normalPrice = package != null && tutor != null
+        ? tutor.HourlyRate * package.NumberOfHours
+        : 0;
+
+    var discountAmount = package != null
+        ? normalPrice - package.Price
+        : 0;
+
+    var discountPercent = normalPrice > 0
+        ? (discountAmount / normalPrice) * 100
+        : 0;
+}
+
+<section class="booking-page-hero">
+    <div class="container">
+        <div class="booking-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🎁 Book Package</span>
+
+                    <h1 class="booking-title">
+                        Book a discounted learning package.
+                    </h1>
+
+                    <p class="booking-subtitle">
+                        Choose a date and one of the tutor’s available time slots to start your package session.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    @if (package != null)
+                    {
+                        <div class="booking-summary-card">
+                            <div class="summary-row">
+                                <span>Package</span>
+                                <strong>@package.Title</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Subject</span>
+                                <strong>@package.Subject?.Name</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Hours</span>
+                                <strong>@package.NumberOfHours</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Offer Price</span>
+                                <strong>@package.Price.ToString("0.00") JOD</strong>
+                            </div>
+
+                            <div class="summary-row">
+                                <span>Discount</span>
+                                <strong>@discountPercent.ToString("0")% OFF</strong>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container booking-section">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="booking-form-panel">
+                <div class="section-mini-header">
+                    <span>📝</span>
+                    <div>
+                        <h3>Package Booking Details</h3>
+                        <p>Select your package start date and available time.</p>
+                    </div>
+                </div>
+
+                @if (package != null)
+                {
+                    <div class="package-public-stats mb-4">
+                        <div>
+                            <span>Normal Price</span>
+                            <strong class="text-muted text-decoration-line-through">
+                                @normalPrice.ToString("0.00") JOD
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Offer Price</span>
+                            <strong class="text-success">
+                                @package.Price.ToString("0.00") JOD
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>You Save</span>
+                            <strong class="text-success">
+                                @discountAmount.ToString("0.00") JOD
+                            </strong>
+                        </div>
+                    </div>
+                }
+
+                <form asp-action="BookPackage" method="post">
+                    <input type="hidden" asp-for="TutorProfileId" />
+                    <input type="hidden" asp-for="SubjectId" />
+                    <input type="hidden" asp-for="EducationalPackageId" />
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="mb-4">
+                        <label asp-for="BookingDate" class="form-label fw-bold">Booking Date</label>
+                        <input asp-for="BookingDate" type="date" class="form-control form-control-lg" />
+                        <span asp-validation-for="BookingDate" class="text-danger"></span>
+                        <small class="text-muted">
+                            The selected date must match the day of the available time.
+                        </small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Available Time</label>
+                        <select name="availabilityId" class="form-select form-select-lg" required>
+                            <option value="">Select Available Time</option>
+
+                            @if (tutor?.TutorAvailabilities != null && tutor.TutorAvailabilities.Any())
+                            {
+                                foreach (var availability in tutor.TutorAvailabilities.Where(a => a.IsActive))
+                                {
+                                    <option value="@availability.Id">
+                                        @availability.DayOfWeek - @availability.StartTime to @availability.EndTime
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <small class="text-muted">
+                            You can only book from the tutor's active availability.
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Confirm Package Booking
+                        </button>
+
+                        <a asp-controller="Student"
+                           asp-action="TutorDetails"
+                           asp-route-id="@Model.TutorProfileId"
+                           class="btn btn-outline-secondary btn-lg">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="booking-help-panel">
+                <div class="feature-icon">💡</div>
+                <h4>Package note</h4>
+                <p class="text-muted mb-0">
+                    This package booking uses the package offer price instead of the tutor’s normal hourly price.
+                </p>
+            </div>
+
+            <div class="booking-help-panel mt-4">
+                <div class="feature-icon">💳</div>
+                <h4>Payment</h4>
+                <p class="text-muted mb-0">
+                    After booking, you can complete payment from My Bookings using Stripe.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

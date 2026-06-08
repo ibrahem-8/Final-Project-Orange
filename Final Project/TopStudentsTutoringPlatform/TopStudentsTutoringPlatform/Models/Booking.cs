@@ -23,6 +23,10 @@ namespace TopStudentsTutoringPlatform.Models
         [ForeignKey("SubjectId")]
         public Subject? Subject { get; set; }
 
+        public int? EducationalPackageId { get; set; }
+
+        public EducationalPackage? EducationalPackage { get; set; }
+
         [DataType(DataType.Date)]
         public DateTime BookingDate { get; set; }
 

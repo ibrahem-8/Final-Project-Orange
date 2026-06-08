@@ -1,0 +1,159 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.TutorProfile>
+
+@{
+    ViewData["Title"] = "Find Tutors";
+}
+
+<section class="student-dashboard-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="hero-badge">🎯 Student Dashboard</span>
+                <h1 class="student-dashboard-title">
+                    Find the right <span class="text-gradient">top student tutor</span> for your course.
+                </h1>
+                <p class="student-dashboard-text">
+                    Search verified tutors by subject, university, major, or name. Compare academic profiles,
+                    grades, hourly rates, and book sessions based on real availability.
+                </p>
+            </div>
+
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a asp-controller="Student" asp-action="MyBookings" class="btn btn-light btn-lg dashboard-hero-btn">
+                    My Bookings
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container dashboard-section">
+    <div class="search-panel">
+        <form asp-controller="Student" asp-action="Dashboard" method="get">
+            <div class="row g-3 align-items-center">
+                <div class="col-lg-8">
+                    <input type="text"
+                           name="search"
+                           value="@ViewBag.Search"
+                           class="form-control form-control-lg"
+                           placeholder="Search by tutor name, subject, university, or major..." />
+                </div>
+
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        Search
+                    </button>
+                </div>
+
+                <div class="col-lg-2">
+                    <a asp-controller="Student" asp-action="Dashboard" class="btn btn-outline-secondary btn-lg w-100">
+                        Clear
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Available Tutors</h2>
+            <p class="text-muted mb-0">
+                Browse verified tutors approved by the platform admin.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() tutor(s) found
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">🔎</div>
+            <h3>No tutors found</h3>
+            <p>
+                Try searching with another subject, tutor name, university, or major.
+            </p>
+            <a asp-controller="Student" asp-action="Dashboard" class="btn btn-primary">
+                View All Tutors
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var tutor in Model)
+            {
+                var subjects = tutor.TutorSubjects != null && tutor.TutorSubjects.Any()
+                ? string.Join(", ", tutor.TutorSubjects.Select(ts => ts.Subject?.Name))
+                : "No subjects added";
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-card-header">
+                            <div class="tutor-avatar">
+                                @{
+                                    var initials = "TS";
+                                    if (!string.IsNullOrWhiteSpace(tutor.User?.FullName))
+                                    {
+                                        var parts = tutor.User.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                                        initials = parts.Length >= 2
+                                        ? $"{parts[0][0]}{parts[1][0]}"
+                                        : $"{parts[0][0]}";
+                                    }
+                                }
+                                @initials.ToUpper()
+                            </div>
+
+                            <div>
+                                <h5 class="mb-1">@tutor.User?.FullName</h5>
+                                <span class="verified-badge">Verified Tutor</span>
+                            </div>
+                        </div>
+
+                        <div class="tutor-meta">
+                            <div>
+                                <span>University</span>
+                                <strong>@tutor.University</strong>
+                            </div>
+
+                            <div>
+                                <span>Major</span>
+                                <strong>@tutor.Major</strong>
+                            </div>
+                        </div>
+
+                        <div class="tutor-info-list">
+                            <div class="info-row">
+                                <span>🎓 GPA</span>
+                                <strong>@tutor.GPA</strong>
+                            </div>
+
+                            <div class="info-row">
+                                <span>📚 Subjects</span>
+                                <strong>@subjects</strong>
+                            </div>
+
+                            <div class="info-row">
+                                <span>💰 Hourly Rate</span>
+                                <strong>@tutor.HourlyRate JOD</strong>
+                            </div>
+                        </div>
+
+                        <p class="tutor-bio">
+                            @tutor.Bio
+                        </p>
+
+                        <a asp-controller="Student"
+                           asp-action="TutorDetails"
+                           asp-route-id="@tutor.Id"
+                           class="btn btn-primary w-100">
+                            View Details & Book
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

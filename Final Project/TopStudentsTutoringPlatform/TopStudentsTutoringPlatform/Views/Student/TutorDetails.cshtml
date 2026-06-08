@@ -1,0 +1,276 @@
+﻿@model TopStudentsTutoringPlatform.Models.TutorProfile
+
+@{
+    ViewData["Title"] = "Tutor Details";
+
+    var tutorName = Model.User?.FullName ?? "Tutor";
+    var initials = "TS";
+
+    if (!string.IsNullOrWhiteSpace(tutorName))
+    {
+        var parts = tutorName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        initials = parts.Length >= 2
+            ? $"{parts[0][0]}{parts[1][0]}"
+            : $"{parts[0][0]}";
+    }
+
+    var subjects = Model.TutorSubjects != null && Model.TutorSubjects.Any()
+        ? Model.TutorSubjects.ToList()
+        : new List<TopStudentsTutoringPlatform.Models.TutorSubject>();
+
+    var activeAvailability = Model.TutorAvailabilities != null
+        ? Model.TutorAvailabilities.Where(a => a.IsActive).ToList()
+        : new List<TopStudentsTutoringPlatform.Models.TutorAvailability>();
+
+    var approvedReviews = Model.Reviews != null
+        ? Model.Reviews.ToList()
+        : new List<TopStudentsTutoringPlatform.Models.Review>();
+
+    var averageRating = approvedReviews.Any()
+        ? approvedReviews.Average(r => r.Rating).ToString("0.0")
+        : "No ratings";
+}
+
+<section class="tutor-profile-hero">
+    <div class="container">
+        <div class="tutor-profile-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div class="profile-avatar">
+                            @initials.ToUpper()
+                        </div>
+
+                        <div>
+                            <span class="verified-badge mb-2">Verified Top Student Tutor</span>
+                            <h1 class="profile-title">@tutorName</h1>
+                            <p class="profile-subtitle">
+                                @Model.Major • @Model.University
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="profile-bio mt-4">
+                        @Model.Bio
+                    </p>
+                </div>
+
+                <div class="col-lg-4 mt-4 mt-lg-0">
+                    <div class="booking-side-card">
+                        <div class="side-stat">
+                            <span>GPA</span>
+                            <strong>@Model.GPA</strong>
+                        </div>
+
+                        <div class="side-stat">
+                            <span>Hourly Rate</span>
+                            <strong>@Model.HourlyRate JOD</strong>
+                        </div>
+
+                        <div class="side-stat">
+                            <span>Average Rating</span>
+                            <strong>@averageRating</strong>
+                        </div>
+
+                        <a asp-controller="Student"
+                           asp-action="BookSession"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-primary w-100 btn-lg mt-3">
+                            Book Session
+                        </a>
+
+                        <a asp-controller="Student"
+                           asp-action="Dashboard"
+                           class="btn btn-outline-secondary w-100 mt-2">
+                            Back to Tutors
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container tutor-details-section">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="details-panel">
+                <div class="section-mini-header">
+                    <span>📚</span>
+                    <div>
+                        <h3>Subjects & Grades</h3>
+                        <p>Subjects this tutor is approved to teach based on academic proof.</p>
+                    </div>
+                </div>
+
+                @if (!subjects.Any())
+                {
+                    <div class="empty-mini-state">
+                        No subjects added yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="subject-chip-grid">
+                        @foreach (var item in subjects)
+                        {
+                            <div class="subject-chip">
+                                <span>@item.Subject?.Name</span>
+                                <strong>Grade: @item.Grade</strong>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="details-panel">
+                <div class="section-mini-header">
+                    <span>⏰</span>
+                    <div>
+                        <h3>Availability</h3>
+                        <p>Book only from the tutor’s available time slots.</p>
+                    </div>
+                </div>
+
+                @if (!activeAvailability.Any())
+                {
+                    <div class="empty-mini-state">
+                        No availability added yet.
+                    </div>
+                }
+                else
+                {
+                    <div class="availability-list">
+                        @foreach (var availability in activeAvailability)
+                        {
+                            <div class="availability-item">
+                                <div>
+                                    <strong>@availability.DayOfWeek</strong>
+                                    <span>@availability.StartTime - @availability.EndTime</span>
+                                </div>
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="details-panel mt-4">
+        <div class="section-mini-header">
+            <span>🎁</span>
+            <div>
+                <h3>Educational Packages</h3>
+                <p>Special discounted packages offered by this tutor.</p>
+            </div>
+        </div>
+
+        @if (Model.EducationalPackages == null || !Model.EducationalPackages.Any())
+        {
+            <div class="empty-mini-state">
+                No packages available yet.
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var package in Model.EducationalPackages)
+                {
+                    var normalPrice = Model.HourlyRate * package.NumberOfHours;
+                    var discountAmount = normalPrice - package.Price;
+                    var discountPercent = normalPrice > 0
+                    ? (discountAmount / normalPrice) * 100
+                    : 0;
+
+                    <div class="col-md-4">
+                        <div class="package-card special-package-card">
+                            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+                                <div>
+                                    <span class="booking-label">Package</span>
+                                    <h5>@package.Title</h5>
+                                </div>
+
+                                <span class="badge bg-warning text-dark">
+                                    @discountPercent.ToString("0")% OFF
+                                </span>
+                            </div>
+
+                            <p>@package.Description</p>
+
+                            <div class="package-subject-pill mb-3">
+                                📚 @package.Subject?.Name
+                            </div>
+
+                            <div class="package-public-stats">
+                                <div>
+                                    <span>Hours</span>
+                                    <strong>@package.NumberOfHours</strong>
+                                </div>
+
+                                <div>
+                                    <span>Normal</span>
+                                    <strong class="text-muted text-decoration-line-through">
+                                        @normalPrice.ToString("0.00") JOD
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Offer Price</span>
+                                    <strong class="text-success">
+                                        @package.Price.ToString("0.00") JOD
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <small class="text-muted d-block mt-3">
+                                Save @discountAmount.ToString("0.00") JOD compared to normal hourly pricing.
+                            </small>
+                            <a asp-controller="Student"
+                               asp-action="BookPackage"
+                               asp-route-packageId="@package.Id"
+                               class="btn btn-primary w-100 mt-3">
+                                Book Package
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="details-panel mt-4">
+        <div class="section-mini-header">
+            <span>⭐</span>
+            <div>
+                <h3>Student Reviews</h3>
+                <p>Only admin-approved reviews are displayed publicly.</p>
+            </div>
+        </div>
+
+        @if (!approvedReviews.Any())
+        {
+            <div class="empty-mini-state">
+                No reviews yet.
+            </div>
+        }
+        else
+        {
+            <div class="review-grid">
+                @foreach (var review in approvedReviews)
+                {
+                    <div class="review-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>@review.Student?.FullName</strong>
+                            <span class="badge bg-warning text-dark">@review.Rating / 5</span>
+                        </div>
+
+                        <p>@review.Comment</p>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>

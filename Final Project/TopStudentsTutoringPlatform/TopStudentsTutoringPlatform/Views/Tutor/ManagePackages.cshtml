@@ -1,0 +1,246 @@
+﻿@model TopStudentsTutoringPlatform.Models.TutorProfile
+
+@{
+    ViewData["Title"] = "Manage Packages";
+
+    var approvedSubjects = ViewBag.ApprovedSubjects as List<TopStudentsTutoringPlatform.Models.TutorSubject>
+        ?? new List<TopStudentsTutoringPlatform.Models.TutorSubject>();
+}
+
+<section class="manage-packages-hero">
+    <div class="container">
+        <div class="manage-packages-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">🎁 Educational Packages</span>
+
+                    <h1 class="manage-packages-title">
+                        Create special learning offers for your students.
+                    </h1>
+
+                    <p class="manage-packages-subtitle">
+                        Build discounted packages based on approved subjects. Each package includes a number of hours
+                        with a special price lower than your normal hourly rate.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Tutor" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container manage-packages-section">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="package-form-panel">
+                <div class="section-mini-header">
+                    <span>➕</span>
+                    <div>
+                        <h3>Add Package</h3>
+                        <p>Create a discounted offer for an approved subject.</p>
+                    </div>
+                </div>
+
+                @if (TempData["PackageSuccess"] != null)
+                {
+                    <div class="alert alert-success premium-alert">
+                        @TempData["PackageSuccess"]
+                    </div>
+                }
+
+                @if (TempData["PackageError"] != null)
+                {
+                    <div class="alert alert-danger premium-alert">
+                        @TempData["PackageError"]
+                    </div>
+                }
+
+                @if (!approvedSubjects.Any())
+                {
+                    <div class="empty-mini-state">
+                        You need at least one approved subject before creating packages.
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="Tutor" asp-action="AddPackage" method="post">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Subject</label>
+                            <select name="subjectId" class="form-select form-select-lg" required>
+                                <option value="">Select Subject</option>
+
+                                @foreach (var item in approvedSubjects)
+                                {
+                                    <option value="@item.SubjectId">
+                                        @item.Subject?.Name - Grade: @item.Grade
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Package Title</label>
+                            <input type="text"
+                                   name="title"
+                                   class="form-control form-control-lg"
+                                   placeholder="Example: Database Final Exam Package"
+                                   required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea name="description"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Describe what students will get in this package"
+                                      required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Number of Hours</label>
+                                <input type="number"
+                                       name="numberOfHours"
+                                       class="form-control form-control-lg"
+                                       min="1"
+                                       placeholder="Example: 5"
+                                       required />
+                            </div>
+
+                            <div class="col-md-6 mb-4">
+                                <label class="form-label fw-bold">Special Price</label>
+                                <input type="number"
+                                       name="price"
+                                       class="form-control form-control-lg"
+                                       min="1"
+                                       step="0.01"
+                                       placeholder="Example: 40"
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="package-price-note mb-4">
+                            <strong>Your normal hourly rate:</strong>
+                            @Model.HourlyRate.ToString("0.00") JOD / hour
+                            <br />
+                            <small>
+                                The package price must be lower than:
+                                number of hours × hourly rate.
+                            </small>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            Add Package
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="packages-list-panel">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                    <div>
+                        <h3 class="fw-bold mb-1">Your Packages</h3>
+                        <p class="text-muted mb-0">
+                            Active packages will appear on your public tutor details page.
+                        </p>
+                    </div>
+
+                    <span class="result-pill">
+                        @(Model.EducationalPackages != null ? Model.EducationalPackages.Count() : 0) package(s)
+                    </span>
+                </div>
+
+                @if (Model.EducationalPackages == null || !Model.EducationalPackages.Any())
+                {
+                    <div class="empty-mini-state">
+                        No packages added yet. Create your first special offer from the form.
+                    </div>
+                }
+                else
+                {
+                    <div class="package-card-grid">
+                        @foreach (var package in Model.EducationalPackages)
+                        {
+                            var normalPrice = Model.HourlyRate * package.NumberOfHours;
+                            var discountAmount = normalPrice - package.Price;
+                            var discountPercent = normalPrice > 0
+                            ? (discountAmount / normalPrice) * 100
+                            : 0;
+
+                            <div class="tutor-package-management-card">
+                                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                    <div>
+                                        <span class="booking-label">Package</span>
+                                        <h4>@package.Title</h4>
+                                        <small class="text-muted">
+                                            @package.Subject?.Name
+                                        </small>
+                                    </div>
+
+                                    @if (package.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    }
+                                </div>
+
+                                <p class="text-muted">
+                                    @package.Description
+                                </p>
+
+                                <div class="package-stats-grid">
+                                    <div>
+                                        <span>Hours</span>
+                                        <strong>@package.NumberOfHours</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Normal Price</span>
+                                        <strong>@normalPrice.ToString("0.00") JOD</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Package Price</span>
+                                        <strong>@package.Price.ToString("0.00") JOD</strong>
+                                    </div>
+
+                                    <div>
+                                        <span>Discount</span>
+                                        <strong>@discountPercent.ToString("0")%</strong>
+                                    </div>
+                                </div>
+
+                                <form asp-controller="Tutor" asp-action="TogglePackageStatus" method="post" class="mt-4">
+                                    <input type="hidden" name="id" value="@package.Id" />
+
+                                    @if (package.IsActive)
+                                    {
+                                        <button type="submit" class="btn btn-outline-danger w-100">
+                                            Deactivate Package
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-success w-100">
+                                            Activate Package
+                                        </button>
+                                    }
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

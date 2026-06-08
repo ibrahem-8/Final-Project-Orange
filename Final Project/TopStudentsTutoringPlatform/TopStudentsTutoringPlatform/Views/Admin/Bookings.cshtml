@@ -1,0 +1,178 @@
+﻿@model IEnumerable<TopStudentsTutoringPlatform.Models.Booking>
+
+@{
+    ViewData["Title"] = "Manage Bookings";
+}
+
+<section class="admin-list-hero">
+    <div class="container">
+        <div class="admin-list-hero-card">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="hero-badge">💳 Bookings & Payments</span>
+
+                    <h1 class="admin-list-title">
+                        Monitor sessions, payments, commissions, and tutor earnings.
+                    </h1>
+
+                    <p class="admin-list-subtitle">
+                        Track every booking in the platform, view payment status, Stripe payment results,
+                        platform commission, tutor earnings, and meeting creation status.
+                    </p>
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container admin-list-section">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="section-heading mb-1">Manage Bookings & Payments</h2>
+            <p class="text-muted mb-0">
+                Review all student bookings and payment tracking records.
+            </p>
+        </div>
+
+        <span class="result-pill">
+            @Model.Count() booking(s)
+        </span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <h3>No bookings found</h3>
+            <p>
+                Bookings will appear here once students start booking sessions with tutors.
+            </p>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-primary">
+                Back to Dashboard
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var booking in Model)
+            {
+                var isPaid = booking.Payment?.PaymentStatus == "Paid";
+                var hasMeeting = !string.IsNullOrEmpty(booking.MeetingLink);
+
+                <div class="col-lg-6">
+                    <div class="admin-booking-card h-100">
+                        <div class="admin-booking-top">
+                            <div>
+                                <span class="booking-label">Student</span>
+                                <h4>@booking.Student?.FullName</h4>
+                                <small class="text-muted">@booking.Student?.Email</small>
+                            </div>
+
+                            @if (booking.Status == "Confirmed")
+                            {
+                                <span class="badge bg-success">@booking.Status</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@booking.Status</span>
+                            }
+                        </div>
+
+                        <div class="admin-booking-people mt-4">
+                            <div>
+                                <span>Tutor</span>
+                                <strong>@booking.TutorProfile?.User?.FullName</strong>
+                                <small>@booking.TutorProfile?.User?.Email</small>
+                            </div>
+                        </div>
+
+                        <div class="booking-info-grid mt-3">
+                            <div class="booking-info-item">
+                                <span>Subject</span>
+                                <strong>@booking.Subject?.Name</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Date</span>
+                                <strong>@booking.BookingDate.ToString("yyyy-MM-dd")</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Time</span>
+                                <strong>@booking.StartTime - @booking.EndTime</strong>
+                            </div>
+
+                            <div class="booking-info-item">
+                                <span>Meeting</span>
+                                @if (hasMeeting)
+                                {
+                                    <strong class="text-success">Created</strong>
+                                }
+                                else
+                                {
+                                    <strong class="text-muted">No Link</strong>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="admin-payment-panel mt-4 @(isPaid ? "paid" : "pending")">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                <div>
+                                    <span>Payment Status</span>
+                                    @if (isPaid)
+                                    {
+                                        <strong>Paid</strong>
+                                    }
+                                    else
+                                    {
+                                        <strong>@(booking.Payment?.PaymentStatus ?? booking.PaymentStatus)</strong>
+                                    }
+                                </div>
+
+                                @if (isPaid)
+                                {
+                                    <span class="badge bg-success">Stripe Paid</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                }
+                            </div>
+
+                            <div class="payment-breakdown">
+                                <div>
+                                    <span>Amount</span>
+                                    <strong>
+                                        @(booking.Payment != null ? booking.Payment.Amount.ToString("0.00") + " JOD" : "-")
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Platform Commission</span>
+                                    <strong>
+                                        @(booking.Payment != null ? booking.Payment.PlatformCommission.ToString("0.00") + " JOD" : "-")
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Tutor Earning</span>
+                                    <strong>
+                                        @(booking.Payment != null ? booking.Payment.TutorEarning.ToString("0.00") + " JOD" : "-")
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

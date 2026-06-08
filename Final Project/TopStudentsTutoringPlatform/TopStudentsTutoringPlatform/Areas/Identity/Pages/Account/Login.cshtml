@@ -1,0 +1,134 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<section class="auth-page">
+    <div class="container">
+        <div class="auth-card">
+            <div class="row g-0 align-items-stretch">
+                <div class="col-lg-6">
+                    <div class="auth-form-panel">
+                        <span class="hero-badge">🔐 Welcome Back</span>
+
+                        <h1 class="auth-title">
+                            Login to continue your learning journey.
+                        </h1>
+
+                        <p class="auth-subtitle">
+                            Access your dashboard, bookings, payments, meetings, reviews, and platform tools based on your role.
+                        </p>
+
+                        <form id="account" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Email"
+                                       class="form-control"
+                                       autocomplete="username"
+                                       aria-required="true"
+                                       placeholder="name@example.com" />
+                                <label asp-for="Input.Email" class="form-label">Email</label>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input asp-for="Input.Password"
+                                       class="form-control"
+                                       autocomplete="current-password"
+                                       aria-required="true"
+                                       placeholder="password" />
+                                <label asp-for="Input.Password" class="form-label">Password</label>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                <label class="form-check-label" asp-for="Input.RememberMe">
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
+
+                            <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
+                                Login
+                            </button>
+
+                            <div class="auth-links mt-4">
+                                <a id="forgot-password" asp-page="./ForgotPassword">
+                                    Forgot your password?
+                                </a>
+
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">
+                                    Create a new account
+                                </a>
+
+                                <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">
+                                    Resend email confirmation
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="auth-info-panel">
+                        <div class="auth-glow"></div>
+
+                        <div class="auth-info-content">
+                            <h2>One platform. Three powerful roles.</h2>
+
+                            <p>
+                                Login to access a personalized experience based on your account type.
+                            </p>
+
+                            <div class="auth-role-card">
+                                <div class="auth-role-icon">🎓</div>
+                                <div>
+                                    <h5>Student Access</h5>
+                                    <p>
+                                        Find verified tutors, book sessions, pay with Stripe, join online meetings,
+                                        submit reviews, and track your bookings.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="auth-role-card">
+                                <div class="auth-role-icon">👨‍🏫</div>
+                                <div>
+                                    <h5>Tutor Access</h5>
+                                    <p>
+                                        Manage your tutor profile, subjects, grades, availability, received bookings,
+                                        meetings, and complaints.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="auth-mini-stats">
+                                <div>
+                                    <strong>Secure</strong>
+                                    <span>Role-based access</span>
+                                </div>
+
+                                <div>
+                                    <strong>Stripe</strong>
+                                    <span>Payment gateway</span>
+                                </div>
+
+                                <div>
+                                    <strong>Verified</strong>
+                                    <span>Tutor approval</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
